@@ -1,9 +1,10 @@
+import { EmptyProjectLabel } from "./components/EmptyProjectLabel"
 
 function App() {
 
   return (
     <>
-      <p>Empty project</p>
+      <EmptyProjectLabel />
     </>
   )
 }
