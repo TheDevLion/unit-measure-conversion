@@ -10,5 +10,10 @@ describe('Group of tests for "helpers/micro_operations"', () => {
 
         expect(result1).toBe(36)
 
+        const n3 = 0.1
+        const n4 = 0.2
+        const result2 = microOperation(n3, n4, OPERATION_ENUM.PLUS)
+
+        expect(result2).toBe(0.3)
     })
 })
