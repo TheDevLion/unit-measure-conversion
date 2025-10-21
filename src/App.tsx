@@ -51,8 +51,8 @@ function App() {
   }
 
   return (
-    <>
-      <label>
+    <div>
+      <label className="text-blue-500">
         Entrada
         <input value={input ?? ''} onChange={handleInputChange} type='number'/>
       </label>
@@ -87,7 +87,7 @@ function App() {
         <option value="gal">gal</option>
         <option value="qt">qt</option>
       </select>
-    </>
+    </div>
   )
 }
 
