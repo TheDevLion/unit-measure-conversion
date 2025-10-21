@@ -1,5 +1,6 @@
 - Tailwind setup (v3)
     - v4 has problems with VITE env
+    - VSCode add extension **Tailwind CSS IntelliSense**
 
 0 - ```pnpm remove tailwindcss postcss autoprefixer```
 
