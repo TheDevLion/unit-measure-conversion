@@ -1,11 +1,15 @@
-import { useState, type ChangeEvent } from "react"
+import { useEffect, useState, type ChangeEvent } from "react"
+import { microOperation, OPERATION_ENUM } from "./helpers/micro_operations"
 
 function App() {
-  const [input, setInput] = useState<number>(0)
-  const [output, setOutput] = useState<number>(0)
+  const [input, setInput] = useState<number | string>('')
+  const [output, setOutput] = useState<number | string>('')
   const [inputUnit, setInputUnit] = useState<string>("ml")
   const [outputUnit, setOutputUnit] = useState<string>("fl_oz")
   
+  useEffect(() => {
+    convert_volume()
+  }, [input])
 
   const volume_conversion: { [key: string]: number } = {
     fl_oz: 1,
@@ -15,13 +19,28 @@ function App() {
   }
 
   const convert_volume = () => {
-    const inputInFlOz = volume_conversion[inputUnit] * input
-    const output = inputInFlOz / volume_conversion[outputUnit]
-    setOutput(output)
+    if (input === '' || isNaN(Number(input))){
+      setOutput('')
+      return
+    }
+
+    const inputInFlOz = microOperation(volume_conversion[inputUnit], Number(input), OPERATION_ENUM.TIMES)
+    const output = microOperation(inputInFlOz ?? 0, volume_conversion[outputUnit], OPERATION_ENUM.DIVIDE)
+    setOutput(output ?? 0)
   }
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setInput(Number(event.target.value))
+    const { value } = event.target
+
+    if (value === '') {
+      setInput('')
+      return
+    }
+
+    const parsed = Number(value)
+    if (!isNaN(parsed)) {
+      setInput(parsed)
+    }
   }
 
   const handleInputUnitChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -35,10 +54,15 @@ function App() {
     <>
       <label>
         Entrada
-        <input value={input} onChange={handleInputChange} type='number'/>
+        <input value={input ?? ''} onChange={handleInputChange} type='number'/>
       </label>
 
-      <select id="entrada-dropdown" name="entrada" onChange={handleInputUnitChange}>
+      <select 
+        id="entrada-dropdown" 
+        name="entrada"
+        value={inputUnit}
+        onChange={handleInputUnitChange}
+      >
         <option value="ml">mL</option>
         <option value="fl_oz">fl Oz</option>
         <option value="gal">gal</option>
@@ -49,20 +73,20 @@ function App() {
       <br />
       <label>
         Conversão
-        <input value={output} type='number' readOnly/>
+        <input value={output ?? ''} type='number' readOnly/>
       </label>
 
-      <select id="saida-dropdown" name="saida" onChange={handleOutputUnitChange}>
+      <select 
+        id="saida-dropdown" 
+        name="saida" 
+        value={outputUnit}
+        onChange={handleOutputUnitChange}
+      >
         <option value="ml">mL</option>
-        <option value="fl_oz" selected>fl Oz</option>
+        <option value="fl_oz">fl Oz</option>
         <option value="gal">gal</option>
         <option value="qt">qt</option>
       </select>
-
-      <br />
-      <br />
-      <button onClick={convert_volume}>Converter</button>
-
     </>
   )
 }
