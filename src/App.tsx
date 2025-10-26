@@ -11,27 +11,41 @@ function App() {
   const inputFieldRef = useRef<HTMLInputElement | null>(null)
   
   useEffect(() => {
-    convert_volume()
+    convert_unit()
   }, [input, inputUnit, outputUnit])
 
-  const volume_conversion: { [key: string]: number } = {
-    fl_oz: 1,
-    gal: 128,
-    ml: 0.0338140227,
-    l: 33.8140227,
-    qt: 32,
+  const conversions: { [category: string]: { [unit: string]: number } } = {
+    volume_conversion: {
+      fl_oz: 1,
+      gal: 128,
+      ml: 0.0338140227,
+      l: 33.8140227,
+      qt: 32,
+    },
+    weight_conversion: {
+      g: 1,
+      kg: 1000,
+      mg: 0.001,
+      oz: 28.3495,
+      lb: 453.592,
+    },
   }
 
-  const convert_volume = () => {
+  
+  const convert_unit = () => {
     if (input === '' || isNaN(Number(input))){
       setOutput('')
       return
     }
 
-    const inputInFlOz = microOperation(volume_conversion[inputUnit], Number(input), OPERATION_ENUM.TIMES)
-    const output = microOperation(inputInFlOz ?? 0, volume_conversion[outputUnit], OPERATION_ENUM.DIVIDE)
+    const category = Object.keys(conversions).find(cat => inputUnit in conversions[cat])
+    if (!category) return null
+
+    const inputInFlOz = microOperation(conversions[category][inputUnit], Number(input), OPERATION_ENUM.TIMES)
+    const output = microOperation(inputInFlOz ?? 0, conversions[category][outputUnit], OPERATION_ENUM.DIVIDE)
     setOutput(output ?? 0)
   }
+  
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target
@@ -105,9 +119,18 @@ function App() {
           value={inputUnit}
           onChange={handleInputUnitChange}
         >
-          {Object.keys(volume_conversion).map((vc, i) => {
-            return <option key={i} value={vc}>{vc.replace("_", " ")}</option>
-          })}
+          {Object.entries(conversions).map(([category, units]) => (
+            <optgroup 
+              key={category} 
+              label={category.replace("_conversion", "").toUpperCase()}
+            >
+              {Object.keys(units).map((unit) => (
+                <option key={unit} value={unit}>
+                  {unit.replace("_", " ")}
+                </option>
+              ))}
+            </optgroup>
+          ))}
         </select>
       </div>
 
@@ -140,9 +163,16 @@ function App() {
             value={outputUnit}
             onChange={handleOutputUnitChange}
           >
-            {Object.keys(volume_conversion).map((vc, i) => {
-              return <option key={i} value={vc}>{vc.replace("_", " ")}</option>
-            })}
+            {(() => {
+              const category = Object.keys(conversions).find(cat => inputUnit in conversions[cat])
+              if (!category) return null
+
+              return Object.keys(conversions[category]).map((unit) => (
+                <option key={unit} value={unit}>
+                  {unit.replace("_", " ")}
+                </option>
+              ))
+            })()}
           </select>
         </div>
 
