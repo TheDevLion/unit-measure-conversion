@@ -74,6 +74,16 @@ function App() {
     setDecimals(decimals - 1)
   }
 
+  const handleSwitch = () => {
+    const inputUnitTemp = inputUnit.toString()
+    setInputUnit(outputUnit)
+    setOutputUnit(inputUnitTemp)
+
+    const inputTemp = input
+    setInput(output)
+    setOutput(inputTemp)
+  }
+
   return (
     <div className="flex items-center justify-center flex-col p-10">
 
@@ -101,12 +111,17 @@ function App() {
         </select>
       </div>
 
-      <button   
-        className="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 transition-colors"
-        onClick={handleResetForm}
-      >
-        Limpar
-      </button>
+
+      <div className="flex gap-5">
+        <button className="text-3xl" onClick={handleSwitch}>&#x21D5;</button>
+
+        <button   
+          className="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 transition-colors"
+          onClick={handleResetForm}
+        >
+          Limpar
+        </button>
+      </div>
 
       <div className="flex flex-col p-5 relative w-[450px] items-center">
         <div className="flex rounded-sm justify-center w-[300px]">
