@@ -103,7 +103,7 @@ function App() {
 
       {window.location.href.includes("localhost") && <h1 className="font-bold text-4xl">DEV MODE</h1>}
 
-      <div className="flex p-5 rounded-sm min-w-[450px] justify-center">
+      <div className="flex p-5 w-[450px] justify-center align-center">
         <input 
           className="mx-5 border-2 border-black px-2 rounded-sm" 
           value={input ?? ''} 
@@ -146,10 +146,10 @@ function App() {
         </button>
       </div>
 
-      <div className="flex flex-col p-5 relative w-[450px] items-center">
-        <div className="flex rounded-sm justify-center w-[300px]">
+      <div className="flex flex-col p-5 relative w-[450px] justify-center align-center">
+        <div className="flex justify-center align-center">
           <input 
-            className="mx-5 border-2 border-black px-2 rounded-sm w-[200px]" 
+            className="mr-5 ml-2 border-2 border-black px-2 rounded-sm w-[200px]" 
             value={handleDecimals(output) ?? ''} 
             type='number' 
             readOnly
