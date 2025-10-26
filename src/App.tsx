@@ -106,7 +106,7 @@ function App() {
           onChange={handleInputUnitChange}
         >
           {Object.keys(volume_conversion).map((vc, i) => {
-            return <option key={i} value={vc}>{vc}</option>
+            return <option key={i} value={vc}>{vc.replace("_", " ")}</option>
           })}
         </select>
       </div>
@@ -140,11 +140,9 @@ function App() {
             value={outputUnit}
             onChange={handleOutputUnitChange}
           >
-            <option value="ml">mL</option>
-            <option value="l">L</option>
-            <option value="fl_oz">fl Oz</option>
-            <option value="gal">gal</option>
-            <option value="qt">qt</option>
+            {Object.keys(volume_conversion).map((vc, i) => {
+              return <option key={i} value={vc}>{vc.replace("_", " ")}</option>
+            })}
           </select>
         </div>
 
