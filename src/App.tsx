@@ -6,6 +6,7 @@ function App() {
   const [output, setOutput] = useState<number | string>('')
   const [inputUnit, setInputUnit] = useState<string>("ml")
   const [outputUnit, setOutputUnit] = useState<string>("fl_oz")
+  const [decimals, setDecimals] = useState(3)
 
   const inputFieldRef = useRef<HTMLInputElement | null>(null)
   
@@ -17,6 +18,7 @@ function App() {
     fl_oz: 1,
     gal: 128,
     ml: 0.0338140227,
+    l: 33.8140227,
     qt: 32,
   }
 
@@ -57,8 +59,25 @@ function App() {
     inputFieldRef?.current?.focus()
   }
 
+  const handleDecimals = (value: number | string) => {
+    if (!value) return ''
+
+    const v = Number(value)
+    return v.toFixed(decimals)
+  }
+
+  const addDecimals = () => {
+    setDecimals(decimals + 1)
+  }
+
+  const removeDecimals = () => {
+    setDecimals(decimals - 1)
+  }
+
   return (
     <div className="flex items-center justify-center flex-col p-10">
+
+      {window.location.href.includes("localhost") && <h1 className="font-bold text-4xl">DEV MODE</h1>}
 
       <div className="flex p-5 rounded-sm min-w-[450px] justify-center">
         <input 
@@ -76,10 +95,9 @@ function App() {
           value={inputUnit}
           onChange={handleInputUnitChange}
         >
-          <option value="ml">mL</option>
-          <option value="fl_oz">fl Oz</option>
-          <option value="gal">gal</option>
-          <option value="qt">qt</option>
+          {Object.keys(volume_conversion).map((vc, i) => {
+            return <option key={i} value={vc}>{vc}</option>
+          })}
         </select>
       </div>
 
@@ -90,28 +108,37 @@ function App() {
         Limpar
       </button>
 
-      <div className="flex p-5 rounded-sm min-w-[450px] justify-center" >
+      <div className="flex flex-col p-5 relative w-[450px] items-center">
+        <div className="flex rounded-sm justify-center w-[300px]">
           <input 
-            className="mx-5 border-2 border-black px-2 rounded-sm" 
-            value={output ?? ''} 
+            className="mx-5 border-2 border-black px-2 rounded-sm w-[200px]" 
+            value={handleDecimals(output) ?? ''} 
             type='number' 
             readOnly
             placeholder="Resultado"
           />
         
 
-        <select 
-          id="saida-dropdown" 
-          name="saida" 
-          value={outputUnit}
-          onChange={handleOutputUnitChange}
-        >
-          <option value="ml">mL</option>
-          <option value="fl_oz">fl Oz</option>
-          <option value="gal">gal</option>
-          <option value="qt">qt</option>
-        </select>
+          <select 
+            id="saida-dropdown" 
+            name="saida" 
+            value={outputUnit}
+            onChange={handleOutputUnitChange}
+          >
+            <option value="ml">mL</option>
+            <option value="l">L</option>
+            <option value="fl_oz">fl Oz</option>
+            <option value="gal">gal</option>
+            <option value="qt">qt</option>
+          </select>
+        </div>
+
+        <div className="absolute top-12 left-24">
+          <button onClick={removeDecimals}>&larr;</button>
+          <button onClick={addDecimals}>&rarr;</button>
+        </div>
       </div>
+      
     </div>
   )
 }
