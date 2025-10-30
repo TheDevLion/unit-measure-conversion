@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react"
+import { useEffect, useRef, useState } from "react"
 import { microOperation, OPERATION_ENUM } from "./helpers/micro_operations"
+import { CONVERSIONS } from "./constants"
+import { MeasureField } from "./components/MeasureField/MeasureField"
 
 function App() {
   const [input, setInput] = useState<number | string>('')
@@ -14,23 +16,6 @@ function App() {
     convert_unit()
   }, [input, inputUnit, outputUnit])
 
-  const conversions: { [category: string]: { [unit: string]: number } } = {
-    volume_conversion: {
-      fl_oz: 1,
-      gal: 128,
-      ml: 0.0338140227,
-      l: 33.8140227,
-      qt: 32,
-    },
-    weight_conversion: {
-      g: 1,
-      kg: 1000,
-      mg: 0.001,
-      oz: 28.3495,
-      lb: 453.592,
-    },
-  }
-
   
   const convert_unit = () => {
     if (input === '' || isNaN(Number(input))){
@@ -38,34 +23,12 @@ function App() {
       return
     }
 
-    const category = Object.keys(conversions).find(cat => inputUnit in conversions[cat])
+    const category = Object.keys(CONVERSIONS).find(cat => inputUnit in CONVERSIONS[cat])
     if (!category) return null
 
-    const inputInFlOz = microOperation(conversions[category][inputUnit], Number(input), OPERATION_ENUM.TIMES)
-    const output = microOperation(inputInFlOz ?? 0, conversions[category][outputUnit], OPERATION_ENUM.DIVIDE)
+    const inputInFlOz = microOperation(CONVERSIONS[category][inputUnit], Number(input), OPERATION_ENUM.TIMES)
+    const output = microOperation(inputInFlOz ?? 0, CONVERSIONS[category][outputUnit], OPERATION_ENUM.DIVIDE)
     setOutput(output ?? 0)
-  }
-  
-
-  const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target
-
-    if (value === '') {
-      setInput('')
-      return
-    }
-
-    const parsed = Number(value)
-    if (!isNaN(parsed)) {
-      setInput(parsed)
-    }
-  }
-
-  const handleInputUnitChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setInputUnit(event.target.value)
-  }
-  const handleOutputUnitChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    setOutputUnit(event.target.value)
   }
 
   const handleResetForm = () => {
@@ -102,38 +65,8 @@ function App() {
     <div className="flex items-center justify-center flex-col p-10">
 
       {window.location.href.includes("localhost") && <h1 className="font-bold text-4xl">DEV MODE</h1>}
-
-      <div className="flex p-5 w-[450px] justify-center align-center">
-        <input 
-          className="mx-5 border-2 border-black px-2 rounded-sm" 
-          value={input ?? ''} 
-          onChange={handleInputChange} 
-          type='number'
-          placeholder="Valor a ser convertido"
-          ref={inputFieldRef}
-        />
-
-        <select 
-          id="entrada-dropdown" 
-          name="entrada"
-          value={inputUnit}
-          onChange={handleInputUnitChange}
-        >
-          {Object.entries(conversions).map(([category, units]) => (
-            <optgroup 
-              key={category} 
-              label={category.replace("_conversion", "").toUpperCase()}
-            >
-              {Object.keys(units).map((unit) => (
-                <option key={unit} value={unit}>
-                  {unit.replace("_", " ")}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-      </div>
-
+      
+      <MeasureField valueState={input} setValueState={setInput} unitState={inputUnit} setUnitState={setInputUnit} />
 
       <div className="flex gap-5">
         <button className="text-3xl" onClick={handleSwitch}>&#x21D5;</button>
@@ -146,41 +79,15 @@ function App() {
         </button>
       </div>
 
-      <div className="flex flex-col p-5 relative w-[450px] justify-center align-center">
-        <div className="flex justify-center align-center">
-          <input 
-            className="mr-5 ml-2 border-2 border-black px-2 rounded-sm w-[200px]" 
-            value={handleDecimals(output) ?? ''} 
-            type='number' 
-            readOnly
-            placeholder="Resultado"
-          />
-        
 
-          <select 
-            id="saida-dropdown" 
-            name="saida" 
-            value={outputUnit}
-            onChange={handleOutputUnitChange}
-          >
-            {(() => {
-              const category = Object.keys(conversions).find(cat => inputUnit in conversions[cat])
-              if (!category) return null
-
-              return Object.keys(conversions[category]).map((unit) => (
-                <option key={unit} value={unit}>
-                  {unit.replace("_", " ")}
-                </option>
-              ))
-            })()}
-          </select>
-        </div>
-
-        <div className="absolute top-12 left-24">
+      <div className="relative">
+        <MeasureField readOnly valueState={output} setValueState={setOutput} unitState={outputUnit} setUnitState={setOutputUnit} handleDecimals={handleDecimals} desiredUnitInput={inputUnit.toString()}/>
+        <div className="absolute top-12 left-[86px]">
           <button onClick={removeDecimals}>&larr;</button>
           <button onClick={addDecimals}>&rarr;</button>
         </div>
-      </div>
+      </div>  
+
       
     </div>
   )
