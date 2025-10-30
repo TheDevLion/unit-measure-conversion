@@ -1,54 +1,17 @@
-import { useEffect, useRef, useState } from "react"
-import { microOperation, OPERATION_ENUM } from "./helpers/micro_operations"
-import { CONVERSIONS } from "./constants"
+import { useRef } from "react"
 import { MeasureField } from "./components/MeasureField/MeasureField"
+import { useInput, useOutput } from "./store/hooks"
+import { convertValue } from "./helpers/convert_values"
 
 function App() {
-  const [input, setInput] = useState<number | string>('')
-  const [output, setOutput] = useState<number | string>('')
-  const [inputUnit, setInputUnit] = useState<string>("ml")
-  const [outputUnit, setOutputUnit] = useState<string>("fl_oz")
-  const [decimals, setDecimals] = useState(3)
-
   const inputFieldRef = useRef<HTMLInputElement | null>(null)
+
+  const { setInputValue, setInputUnit, inputUnit, inputValue  } = useInput()
+  const { outputUnit, setOutputUnit, setOutputPrecision, outputPrecision } = useOutput()
   
-  useEffect(() => {
-    convert_unit()
-  }, [input, inputUnit, outputUnit])
-
-  
-  const convert_unit = () => {
-    if (input === '' || isNaN(Number(input))){
-      setOutput('')
-      return
-    }
-
-    const category = Object.keys(CONVERSIONS).find(cat => inputUnit in CONVERSIONS[cat])
-    if (!category) return null
-
-    const inputInFlOz = microOperation(CONVERSIONS[category][inputUnit], Number(input), OPERATION_ENUM.TIMES)
-    const output = microOperation(inputInFlOz ?? 0, CONVERSIONS[category][outputUnit], OPERATION_ENUM.DIVIDE)
-    setOutput(output ?? 0)
-  }
-
   const handleResetForm = () => {
-    setInput('')
+    setInputValue('')
     inputFieldRef?.current?.focus()
-  }
-
-  const handleDecimals = (value: number | string) => {
-    if (!value) return ''
-
-    const v = Number(value)
-    return v.toFixed(decimals)
-  }
-
-  const addDecimals = () => {
-    setDecimals(decimals + 1)
-  }
-
-  const removeDecimals = () => {
-    setDecimals(decimals - 1)
   }
 
   const handleSwitch = () => {
@@ -56,9 +19,15 @@ function App() {
     setInputUnit(outputUnit)
     setOutputUnit(inputUnitTemp)
 
-    const inputTemp = input
-    setInput(output)
-    setOutput(inputTemp)
+    setInputValue(convertValue(inputValue, inputUnit, outputUnit, outputPrecision))
+  }
+
+  const addDecimals = () => {
+      setOutputPrecision(outputPrecision + 1)
+  }
+
+  const removeDecimals = () => {
+      setOutputPrecision(outputPrecision - 1)
   }
 
   return (
@@ -66,7 +35,7 @@ function App() {
 
       {window.location.href.includes("localhost") && <h1 className="font-bold text-4xl">DEV MODE</h1>}
       
-      <MeasureField valueState={input} setValueState={setInput} unitState={inputUnit} setUnitState={setInputUnit} />
+      <MeasureField />
 
       <div className="flex gap-5">
         <button className="text-3xl" onClick={handleSwitch}>&#x21D5;</button>
@@ -81,7 +50,7 @@ function App() {
 
 
       <div className="relative">
-        <MeasureField readOnly valueState={output} setValueState={setOutput} unitState={outputUnit} setUnitState={setOutputUnit} handleDecimals={handleDecimals} desiredUnitInput={inputUnit.toString()}/>
+        <MeasureField readOnly />
         <div className="absolute top-12 left-[86px]">
           <button onClick={removeDecimals}>&larr;</button>
           <button onClick={addDecimals}>&rarr;</button>

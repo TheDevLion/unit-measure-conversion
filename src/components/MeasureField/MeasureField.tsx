@@ -1,47 +1,40 @@
 import { type ChangeEvent } from "react"
 import { CONVERSIONS } from "../../constants"
+import { useInput, useOutput } from "../../store/hooks";
+import { convertValue } from "../../helpers/convert_values";
 
 
 export type MeasureFieldProps = {
     readOnly?: boolean;
-    valueState: string | number;
-    setValueState: React.Dispatch<React.SetStateAction<string | number>>;
-    unitState: string;
-    setUnitState: React.Dispatch<React.SetStateAction<string>>;
-    handleDecimals?: (value: string | number) => string;
-    desiredUnitInput?: string; // Needed for find proper conversion category (filter output units)
 }
 
-export const MeasureField = ({ 
-    readOnly, 
-    valueState, 
-    setValueState, 
-    unitState, 
-    setUnitState,
-    handleDecimals,
-    desiredUnitInput
-}: MeasureFieldProps) => {
+export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
+    const { setInputValue, setInputUnit, inputUnit, inputValue  } = useInput()
+    const { outputUnit, setOutputUnit, outputPrecision } = useOutput()
+    
     const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target
 
-        if (value === '') {
-        setValueState('')
-        return
+        if (value === '' && !readOnly) {
+            setInputValue('')
+            return
         }
 
         const parsed = Number(value)
-        if (!isNaN(parsed)) {
-        setValueState(parsed)
+        if (!isNaN(parsed) && !readOnly) {
+            setInputValue(parsed)
         }
     }
     const handleUnitChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        setUnitState(event.target.value)
+        const unit = event.target.value
+        if (readOnly) setOutputUnit(unit) 
+        else setInputUnit(unit)
     }
 
     return <div className="flex p-5 w-[450px] justify-center align-center">
             <input 
               className="mx-5 border-2 border-black px-2 rounded-sm" 
-              value={readOnly && handleDecimals ? handleDecimals(valueState) : valueState ?? ''} 
+              value={readOnly ? convertValue(inputValue, inputUnit, outputUnit, outputPrecision) : inputValue} 
               onChange={handleValueChange} 
               type='number'
               placeholder={!readOnly ? "Valor a ser convertido" : "Result"}
@@ -53,7 +46,7 @@ export const MeasureField = ({
             />
     
             <select
-              value={unitState}
+              value={readOnly ? outputUnit : inputUnit}
               onChange={handleUnitChange}
               className="w-[80px]"
             >
@@ -70,8 +63,8 @@ export const MeasureField = ({
                 </optgroup>
               ))}
 
-              {readOnly && desiredUnitInput && (() => {
-                const category = Object.keys(CONVERSIONS).find(cat => desiredUnitInput in CONVERSIONS[cat])
+              {readOnly && (() => {
+                const category = Object.keys(CONVERSIONS).find(cat => inputUnit in CONVERSIONS[cat])
                 if (!category) return null
 
                 return Object.keys(CONVERSIONS[category]).map((unit) => (
