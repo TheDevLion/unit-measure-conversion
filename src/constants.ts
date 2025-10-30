@@ -14,4 +14,14 @@ export const CONVERSIONS: { [category: string]: { [unit: string]: number } } = {
       oz: 28.3495,
       lb: 453.592,
     },
+    distance_conversion: {
+      m: 1,
+      km: 1000,
+      mm: 0.001,
+      cm: 0.01,
+      mi: 1609.344,
+      yard: 0.9144,
+      ft: 0.3048,
+      in: 0.0254,
+    }
 }
