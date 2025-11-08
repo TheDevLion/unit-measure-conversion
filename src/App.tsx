@@ -2,6 +2,7 @@ import { useRef } from "react"
 import { MeasureField } from "./components/MeasureField/MeasureField"
 import { useInput, useOutput, useSetInput } from "./store/hooks"
 import { convertValue } from "./helpers/convert_values"
+import { CONVERSIONS_V2 } from "./constants"
 
 function App() {
   const inputFieldRef = useRef<HTMLInputElement | null>(null)
@@ -17,12 +18,34 @@ function App() {
   }
 
   const handleSwitch = () => {
-    const inputUnitTemp = input.unit.toString()
-    setInput({unit: outputHook.output.unit})
-    outputHook.setOutput({unit: inputUnitTemp})
+    const inputUnitObj = CONVERSIONS_V2.find(u => u.abbv === input.unit);
+    if (!inputUnitObj) return;
 
-    setInput({ value: convertValue(input.value, input.unit, outputHook.output.unit, outputHook.output.precision)})
-  }
+    const outputUnitObj = CONVERSIONS_V2.find(u =>  u.abbv === outputHook.output.unit);
+    if (!outputUnitObj) return;
+
+    const newInputValue = convertValue(
+      input.value,
+      input.unit,
+      outputUnitObj.abbv,
+      outputHook.output.precision
+    );
+
+    if (newInputValue === "" || isNaN(Number(newInputValue))) return;
+
+    setInput({
+      unit: outputUnitObj.abbv,
+      value: Number(newInputValue),
+    });
+
+    outputHook.setOutput({
+      unit: input.unit,
+    });
+  };
+
+
+
+
 
   const addDecimals = () => {
     outputHook.setOutput({ precision: outputHook.output.precision + 1})
@@ -53,7 +76,7 @@ function App() {
 
       <div className="relative">
         <MeasureField readOnly />
-        <div className="absolute top-12 left-[86px]">
+        <div className="absolute top-20 left-[40px]">
           <button onClick={removeDecimals}>&larr;</button>
           <button onClick={addDecimals}>&rarr;</button>
         </div>

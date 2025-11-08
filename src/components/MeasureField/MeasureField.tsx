@@ -1,12 +1,19 @@
-import { type ChangeEvent } from "react"
-import { CONVERSIONS } from "../../constants"
+import { useMemo, type ChangeEvent } from "react"
 import { useInput, useOutput, useSetInput } from "../../store/hooks";
 import { convertValue } from "../../helpers/convert_values";
+import { Autocomplete, TextField } from "@mui/material";
+import { CONVERSIONS_V2 } from "../../constants";
 
 
 export type MeasureFieldProps = {
     readOnly?: boolean;
 }
+
+type Option = {
+  title: string;
+  abbv: string;
+  category: string;
+};
 
 export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
     const input = useInput()
@@ -15,24 +22,41 @@ export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
     const outputHook = useOutput()
     
     const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const { value } = event.target
+      const { value } = event.target
 
-        if (value === '' && !readOnly) {
-            setInput({ value: ''} )
-            return
-        }
+      if (value === '' && !readOnly) {
+          setInput({ value: ''} )
+          return
+      }
 
-        const parsed = Number(value)
-        if (!isNaN(parsed) && !readOnly) {
-            setInput({ value: parsed} )
+      const parsed = Number(value)
+      if (!isNaN(parsed) && !readOnly) {
+          setInput({ value: parsed} )
+      }
+    }
+    const handleUnitChange = (_: React.SyntheticEvent<Element, Event>, value: Option | null) => {
+        if (!value) return
+
+        const unit = value.abbv
+
+        if (readOnly) {
+          outputHook.setOutput({ unit });
+        } else {
+          setInput({ unit });
         }
     }
-    const handleUnitChange = (event: ChangeEvent<HTMLSelectElement>) => {
-        const unit = event.target.value
-        if (readOnly) outputHook.setOutput({ unit })
 
-        else setInput({ unit })
+    const buildAutocompleteOptions = (): Option[] => {
+      return CONVERSIONS_V2.map(unit => ({
+        title: `(${unit.abbv.replace("_", " ")}) - ${unit.name}`,
+        abbv: unit.abbv,
+        category: unit.category
+      }));
     }
+
+    const options = useMemo(() => buildAutocompleteOptions(), []);
+    const selectedUnitOption = options.find(o => !readOnly ? o.abbv === input.unit : o.abbv === outputHook.output.unit) || null;
+
 
     return <div className="flex p-5 w-[450px] justify-center align-center">
             <input 
@@ -48,34 +72,35 @@ export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
               //    inputFieldRef?.current?.focus()
             />
     
-            <select
-              value={readOnly ? outputHook.output.unit : input.unit}
+            <Autocomplete
               onChange={handleUnitChange}
-              className="w-[80px]"
-            >
-              {!readOnly && Object.entries(CONVERSIONS).map(([category, units]) => (
-                <optgroup 
-                  key={category} 
-                  label={category.replace("_conversion", "").toUpperCase()}
-                >
-                  {Object.keys(units).map((unit) => (
-                    <option key={unit} value={unit}>
-                      {unit.replace("_", " ")}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-
-              {readOnly && (() => {
-                const category = Object.keys(CONVERSIONS).find(cat => input.unit in CONVERSIONS[cat])
-                if (!category) return null
-
-                return Object.keys(CONVERSIONS[category]).map((unit) => (
-                    <option key={unit} value={unit}>
-                    {unit.replace("_", " ")}
-                    </option>
-                ))
-                })()}
-            </select>
+              options={options}
+              groupBy={(option: Option) => option.category}
+              getOptionLabel={(option) => option.title}
+              value={selectedUnitOption}
+              renderInput={(params) => <TextField {...params} label="Unit" />}
+              renderOption={(props, option) => {
+                let { key, ...rest } = props;
+                return <li 
+                  key={option.abbv} 
+                  {...rest} 
+                  className={`px-3 py-2 text-xs cursor-pointer hover:bg-gray-200`}>
+                    {option.title}
+                </li>;
+              }}
+              className="w-[350px]"
+              ListboxProps={{
+                sx: {
+                  "& .MuiAutocomplete-groupLabel": {
+                    fontWeight: "bold",
+                    textTransform: "capitalize",
+                    fontSize: "0.875rem",
+                    px: 1,
+                    py: 1,
+                  },
+                },
+              }}
+            />
+            
         </div>
 }

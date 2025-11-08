@@ -1,16 +1,28 @@
-import { CONVERSIONS } from "../constants"
-import { microOperation, OPERATION_ENUM } from "./micro_operations"
+import { CONVERSIONS_V2 } from "../constants";
+import { microOperation, OPERATION_ENUM } from "./micro_operations";
 
-export const convertValue = (inputValue: number | string, inputUnit: string, outputUnit: string, outputPrecision: number) => {
-    if (inputValue === '' || isNaN(Number(inputValue))){
-        return ''
-    }
+export const convertValue = (
+  inputValue: number | string,
+  inputUnit: string,
+  outputUnit: string,
+  outputPrecision: number
+) => {
+  if (inputValue === "" || isNaN(Number(inputValue))) {
+    return "";
+  }
 
-    const category = Object.keys(CONVERSIONS).find(cat => inputUnit in CONVERSIONS[cat])
-    if (!category) return ''
+  const value = Number(inputValue);
+  const inputUnitToSerach = inputUnit
+  const outputUnitToSerach = outputUnit
+  const inputObj = CONVERSIONS_V2.find(u => u.abbv === inputUnitToSerach);
+  const outputObj = CONVERSIONS_V2.find(u => u.abbv === outputUnitToSerach);
 
-    const inputInFlOz = microOperation(CONVERSIONS[category][inputUnit], Number(inputValue), OPERATION_ENUM.TIMES)
-    const output = microOperation(inputInFlOz ?? 0, CONVERSIONS[category][outputUnit], OPERATION_ENUM.DIVIDE)
+  if (!inputObj || !outputObj || inputObj.category !== outputObj.category) {
+    return "";
+  }
 
-    return output ? output.toFixed(outputPrecision) : 0
-}
+  const inputInBase = microOperation(inputObj.conv_rate, value, OPERATION_ENUM.TIMES);
+  const output = microOperation(inputInBase ?? 0, outputObj.conv_rate, OPERATION_ENUM.DIVIDE);
+
+  return output ? output.toFixed(outputPrecision) : "0";
+};
