@@ -1,6 +1,6 @@
 import { type ChangeEvent } from "react"
 import { CONVERSIONS } from "../../constants"
-import { useInput, useOutput } from "../../store/hooks";
+import { useInput, useOutput, useSetInput } from "../../store/hooks";
 import { convertValue } from "../../helpers/convert_values";
 
 
@@ -9,32 +9,35 @@ export type MeasureFieldProps = {
 }
 
 export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
-    const { setInputValue, setInputUnit, inputUnit, inputValue  } = useInput()
-    const { outputUnit, setOutputUnit, outputPrecision } = useOutput()
+    const input = useInput()
+    const setInput = useSetInput()
+
+    const outputHook = useOutput()
     
     const handleValueChange = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target
 
         if (value === '' && !readOnly) {
-            setInputValue('')
+            setInput({ value: ''} )
             return
         }
 
         const parsed = Number(value)
         if (!isNaN(parsed) && !readOnly) {
-            setInputValue(parsed)
+            setInput({ value: parsed} )
         }
     }
     const handleUnitChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const unit = event.target.value
-        if (readOnly) setOutputUnit(unit) 
-        else setInputUnit(unit)
+        if (readOnly) outputHook.setOutput({ unit })
+
+        else setInput({ unit })
     }
 
     return <div className="flex p-5 w-[450px] justify-center align-center">
             <input 
               className="mx-5 border-2 border-black px-2 rounded-sm" 
-              value={readOnly ? convertValue(inputValue, inputUnit, outputUnit, outputPrecision) : inputValue} 
+              value={readOnly ? convertValue(input.value, input.unit, outputHook.output.unit, outputHook.output.precision) : input.value} 
               onChange={handleValueChange} 
               type='number'
               placeholder={!readOnly ? "Valor a ser convertido" : "Result"}
@@ -46,7 +49,7 @@ export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
             />
     
             <select
-              value={readOnly ? outputUnit : inputUnit}
+              value={readOnly ? outputHook.output.unit : input.unit}
               onChange={handleUnitChange}
               className="w-[80px]"
             >
@@ -64,7 +67,7 @@ export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
               ))}
 
               {readOnly && (() => {
-                const category = Object.keys(CONVERSIONS).find(cat => inputUnit in CONVERSIONS[cat])
+                const category = Object.keys(CONVERSIONS).find(cat => input.unit in CONVERSIONS[cat])
                 if (!category) return null
 
                 return Object.keys(CONVERSIONS[category]).map((unit) => (

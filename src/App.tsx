@@ -1,33 +1,35 @@
 import { useRef } from "react"
 import { MeasureField } from "./components/MeasureField/MeasureField"
-import { useInput, useOutput } from "./store/hooks"
+import { useInput, useOutput, useSetInput } from "./store/hooks"
 import { convertValue } from "./helpers/convert_values"
 
 function App() {
   const inputFieldRef = useRef<HTMLInputElement | null>(null)
 
-  const { setInputValue, setInputUnit, inputUnit, inputValue  } = useInput()
-  const { outputUnit, setOutputUnit, setOutputPrecision, outputPrecision } = useOutput()
+  const input = useInput()
+  const setInput = useSetInput()
+
+  const outputHook = useOutput()
   
   const handleResetForm = () => {
-    setInputValue('')
+    setInput({ value: ''})
     inputFieldRef?.current?.focus()
   }
 
   const handleSwitch = () => {
-    const inputUnitTemp = inputUnit.toString()
-    setInputUnit(outputUnit)
-    setOutputUnit(inputUnitTemp)
+    const inputUnitTemp = input.unit.toString()
+    setInput({unit: outputHook.output.unit})
+    outputHook.setOutput({unit: inputUnitTemp})
 
-    setInputValue(convertValue(inputValue, inputUnit, outputUnit, outputPrecision))
+    setInput({ value: convertValue(input.value, input.unit, outputHook.output.unit, outputHook.output.precision)})
   }
 
   const addDecimals = () => {
-      setOutputPrecision(outputPrecision + 1)
+    outputHook.setOutput({ precision: outputHook.output.precision + 1})
   }
 
   const removeDecimals = () => {
-      setOutputPrecision(outputPrecision - 1)
+    outputHook.setOutput({ precision: outputHook.output.precision - 1})
   }
 
   return (
