@@ -87,10 +87,8 @@ export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
               value={selectedUnitOption}
               renderInput={(params) => <TextField {...params} label="Unit" />}
               renderOption={(props, option) => {
-                let { key, ...rest } = props;
-                return <li 
-                  key={option.abbv} 
-                  {...rest} 
+                return <li
+                  {...props} 
                   className={`px-3 py-2 text-xs cursor-pointer hover:bg-gray-200`}>
                     {option.title}
                 </li>;
