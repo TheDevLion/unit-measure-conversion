@@ -47,14 +47,21 @@ export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
     }
 
     const buildAutocompleteOptions = (): Option[] => {
-      return CONVERSIONS_V2.map(unit => ({
-        title: `(${unit.abbv.replace("_", " ")}) - ${unit.name}`,
-        abbv: unit.abbv,
-        category: unit.category
-      }));
+      let units = CONVERSIONS_V2
+
+      if (readOnly) {
+        const inputUnitObj = CONVERSIONS_V2.find(c => c.abbv === input.unit)
+        units = units.filter(u => u.category === inputUnitObj?.category) 
+      }
+
+      return units.map(unit => ({
+          title: `(${unit.abbv.replace("_", " ")}) - ${unit.name}`,
+          abbv: unit.abbv,
+          category: unit.category
+        }));
     }
 
-    const options = useMemo(() => buildAutocompleteOptions(), []);
+    const options = useMemo(() => buildAutocompleteOptions(), [input.unit, outputHook.output.unit]);
     const selectedUnitOption = options.find(o => !readOnly ? o.abbv === input.unit : o.abbv === outputHook.output.unit) || null;
 
 

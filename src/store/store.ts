@@ -5,10 +5,10 @@ import type { MeasureConversionState, MeasureConversionStore } from "./type";
 export const initialStore: MeasureConversionState = {
     input: {
         value: '',
-        unit: 'fl_oz',
+        unit: '',
     },
     output: {
-        unit: 'ml',
+        unit: '',
         precision: 3,
     }
 }
