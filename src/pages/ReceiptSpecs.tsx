@@ -57,7 +57,7 @@ export const ReceiptSpecs = () => {
     );
   };
 
-  const handleProductChange = (id: string, field: keyof Product, value: any) => {
+  const handleProductChange = (id: string, field: keyof Product, value: number) => {
     setProducts((prev) =>
       prev.map((p) => (p.id === id ? { ...p, [field]: value } : p))
     );
@@ -67,7 +67,7 @@ export const ReceiptSpecs = () => {
     productId: string,
     subRowId: string,
     field: keyof SubRow,
-    value: any
+    value: number
   ) => {
     setProducts((prev) =>
       prev.map((p) =>
@@ -140,7 +140,7 @@ export const ReceiptSpecs = () => {
                   placeholder="Product"
                   value={product.name}
                   onChange={(e) =>
-                    handleProductChange(product.id, "name", e.target.value)
+                    handleProductChange(product.id, "name", Number(e.target.value))
                   }
                   className="border p-1 flex-1 rounded"
                 />
@@ -158,7 +158,7 @@ export const ReceiptSpecs = () => {
                   placeholder="Unit"
                   value={product.unit}
                   onChange={(e) =>
-                    handleProductChange(product.id, "unit", e.target.value)
+                    handleProductChange(product.id, "unit", Number(e.target.value))
                   }
                   className="border p-1 w-20 rounded"
                 />
@@ -204,7 +204,7 @@ export const ReceiptSpecs = () => {
                       placeholder="Description"
                       value={s.description}
                       onChange={(e) =>
-                        handleSubRowChange(product.id, s.id, "description", e.target.value)
+                        handleSubRowChange(product.id, s.id, "description", Number(e.target.value))
                       }
                       className="border p-1 w-32 rounded"
                     />
@@ -222,7 +222,7 @@ export const ReceiptSpecs = () => {
                       placeholder="Unit"
                       value={s.unit}
                       onChange={(e) =>
-                        handleSubRowChange(product.id, s.id, "unit", e.target.value)
+                        handleSubRowChange(product.id, s.id, "unit", Number(e.target.value))
                       }
                       className="border p-1 w-20 rounded"
                     />

@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import { MeasureField } from "../components/MeasureField/MeasureField"
-import { useInput, useIsDevMode, useOutput, useSetInput } from "../store/hooks"
+import { useInput, useOutput, useSetInput } from "../store/hooks"
 import { convertValue } from "../helpers/convert_values"
 import { CONVERSIONS_V2 } from "../constants"
 
@@ -9,7 +9,6 @@ export const UnitMeasureConversor = () => {
 
   const input = useInput()
   const setInput = useSetInput()
-  const devMode = useIsDevMode()
 
   const outputHook = useOutput()
   
