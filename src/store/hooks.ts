@@ -12,3 +12,6 @@ export const useSetInput = () => useMeasureConversionStore(useShallow(selectSetI
 // Pattern 2
 export const selectCombinedOutput = ({ output, setOutput }: MeasureConversionStore) => ({ output, setOutput })
 export const useOutput = () => useMeasureConversionStore(useShallow(selectCombinedOutput))
+
+export const selectIsDevMode = ({ isDevMode, setIsDevMode }: MeasureConversionStore) => ({ isDevMode, setIsDevMode })
+export const useIsDevMode = () => useMeasureConversionStore(useShallow(selectIsDevMode))

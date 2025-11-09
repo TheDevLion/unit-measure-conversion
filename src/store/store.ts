@@ -10,11 +10,13 @@ export const initialStore: MeasureConversionState = {
     output: {
         unit: '',
         precision: 3,
-    }
+    },
+    isDevMode: false,
 }
 
 export const useMeasureConversionStore = create<MeasureConversionStore>()((set) => ({
     ...initialStore,
     setInput: (inputUpdate) => set((state) => ({ input: { ...state.input, ...inputUpdate } })),
     setOutput: (outputUpdate) => set((state) => ({ output: { ...state.output, ...outputUpdate } })),
+    setIsDevMode: (isDevMode: boolean) => set((state) => ({...state, isDevMode}))
 }));
