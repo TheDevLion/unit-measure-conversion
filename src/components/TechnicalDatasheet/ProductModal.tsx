@@ -51,7 +51,7 @@ export const ProductsModal = ({ onClose }: Props) => {
         setProducts(updated)
     };
 
-    const handleChangeProduct = (id: string, field: keyof Product, value: any) => {
+    const handleChangeProduct = (id: string, field: keyof Product, value: number | string) => {
         const updated = products.map((p) =>
             p.id === id ? { ...p, [field]: value } : p
         );

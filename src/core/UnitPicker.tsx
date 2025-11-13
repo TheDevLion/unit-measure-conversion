@@ -1,11 +1,11 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import { CONVERSIONS_V2 } from "../constants";
 import TextField from "@mui/material/TextField";
-import { Popper } from "@mui/material";
+import { Popper, type PopperProps } from "@mui/material";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 
 
-const CustomPopper = (props: any) => (
+const CustomPopper = (props: PopperProps) => (
   <Popper
     {...props}
     modifiers={[
