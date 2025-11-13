@@ -3,17 +3,12 @@ import { useInput, useOutput, useSetInput } from "../../store/hooks";
 import { convertValue } from "../../helpers/convert_values";
 import { Autocomplete, TextField } from "@mui/material";
 import { CONVERSIONS_V2 } from "../../constants";
+import type { Option } from "../../core/UnitPicker";
 
 
 export type MeasureFieldProps = {
     readOnly?: boolean;
 }
-
-type Option = {
-  title: string;
-  abbv: string;
-  category: string;
-};
 
 export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
     const input = useInput()

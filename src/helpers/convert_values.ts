@@ -5,7 +5,7 @@ export const convertValue = (
   inputValue: number | string,
   inputUnit: string,
   outputUnit: string,
-  outputPrecision: number
+  outputPrecision?: number
 ) => {
   if (inputValue === "" || isNaN(Number(inputValue))) {
     return "";
@@ -24,5 +24,5 @@ export const convertValue = (
   const inputInBase = microOperation(inputObj.conv_rate, value, OPERATION_ENUM.TIMES);
   const output = microOperation(inputInBase ?? 0, outputObj.conv_rate, OPERATION_ENUM.DIVIDE);
 
-  return output ? output.toFixed(outputPrecision) : "0";
+  return outputPrecision ? output ? output.toFixed(outputPrecision) : "0" : output;
 };

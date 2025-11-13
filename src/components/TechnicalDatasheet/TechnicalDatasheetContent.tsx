@@ -1,0 +1,187 @@
+import { useEffect, useState } from "react";
+import { useSelectedSheet, type Product } from "./store";
+import { UnitPicker, type Option } from "../../core/UnitPicker";
+import { convertValue } from "../../helpers/convert_values";
+import { CONVERSIONS_V2 } from "../../constants";
+
+type Ingredient = {
+  id: string;
+  productId: string;
+  priceId: string;
+  quantity: number | "";
+  unit: string;
+};
+
+export const TechnicalDatasheetContent = () => {
+  const { selectedSheet } = useSelectedSheet();
+  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    const savedIngredients = localStorage.getItem("ingredients");
+    if (savedIngredients) setIngredients(JSON.parse(savedIngredients));
+
+    const savedProducts = localStorage.getItem("products");
+    if (savedProducts) setProducts(JSON.parse(savedProducts));
+  }, []);
+
+  const persistIngredients = (newIngredients: Ingredient[]) => {
+    setIngredients(newIngredients);
+    localStorage.setItem("ingredients", JSON.stringify(newIngredients));
+  };
+
+  const handleAddIngredient = () => {
+    const newIngredient: Ingredient = {
+      id: Date.now().toString(),
+      productId: "",
+      priceId: "",
+      quantity: 1,
+      unit: "",
+    };
+    persistIngredients([...ingredients, newIngredient]);
+  };
+
+  const handleDeleteIngredient = (id: string) => {
+    persistIngredients(ingredients.filter((i) => i.id !== id));
+  };
+
+  const handleChange = (
+    id: string,
+    field: keyof Ingredient,
+    value: string | number
+  ) => {
+    const updated = ingredients.map((i) =>
+      i.id === id ? { ...i, [field]: value } : i
+    );
+    persistIngredients(updated);
+  };
+
+  const getProductPrice = (ing: Ingredient) => {
+    const product = products.find((p) => p.id === ing.productId);
+    const price = product?.prices.find((pr) => pr.id === ing.priceId);
+
+    const inputValue = ing.quantity
+    const inputUnit = ing.unit
+    const outputUnit = product?.unit
+    const parcialResult = convertValue(inputValue, inputUnit, outputUnit ?? "")
+
+    if (parcialResult && product?.quantity)
+      return price && price.value && ing.quantity ? price.value * (Number(parcialResult) / product?.quantity) : 0;
+  };
+
+  const handleUnitChange = (productId: string, _: React.SyntheticEvent<Element, Event>, value: Option | null) => {
+        if (!value) return;
+        const unit = value.abbv;
+        handleChange(productId, "unit", unit);
+    };
+
+  const getUnitCategory = (productId: string) => {
+    if (!productId) return undefined;
+
+    const product = products.find(p => p.id === productId);
+    if (!product) return undefined;
+
+    // retorna a categoria da unidade padrão do produto
+    const conversion = CONVERSIONS_V2.find(c => c.abbv === product.unit);
+    return conversion?.category;
+};
+
+
+  if (!selectedSheet)
+    return (
+      <h3 className="flex justify-center m-10">
+        Select a technical datasheet first.
+      </h3>
+    );
+
+  return (
+    <div className="flex flex-col items-center justify-center py-8">
+      <button
+        onClick={handleAddIngredient}
+        className="mb-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow"
+      >
+        + Add Ingredient
+      </button>
+
+      <table className="min-w-[80%] border border-gray-300 shadow-md rounded-xl overflow-hidden">
+        <thead className="bg-gray-100">
+          <tr>
+            <th className="p-2 border">Product</th>
+            <th className="p-2 border">Price/Description</th>
+            <th className="p-2 border w-[10%]">Qtd.</th>
+            <th className="p-2 border w-[10%]">Unit</th>
+            <th className="p-2 border w-[10%]">Total</th>
+            <th className="p-2 border w-[10%]">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ingredients.map((i) => (
+            <tr key={i.id}>
+              <td className="border p-2">
+                <select
+                  className="border rounded p-1 w-full"
+                  value={i.productId}
+                  onChange={(e) => handleChange(i.id, "productId", e.target.value)}
+                >
+                  <option value="">Select product</option>
+                  {products.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </td>
+              <td className="border p-2">
+                <select
+                  className="border rounded p-1 w-full"
+                  value={i.priceId}
+                  onChange={(e) => handleChange(i.id, "priceId", e.target.value)}
+                  disabled={!i.productId}
+                >
+                  <option value="">Select option</option>
+                  {products
+                    .find((p) => p.id === i.productId)
+                    ?.prices.map((pr) => (
+                      <option key={pr.id} value={pr.id}>
+                        {pr.description} — ${pr.value}
+                      </option>
+                    ))}
+                </select>
+              </td>
+              <td className="border p-2">
+                <input
+                  type="number"
+                  className="border rounded p-1 w-full"
+                  value={i.quantity}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    handleChange(i.id, "quantity", val === "" ? "" : Number(val))
+                  }}
+                />
+              </td>
+              <td className="border p-2">
+                <UnitPicker 
+                    abbvVersion 
+                    unitState={i.unit}   
+                    category={getUnitCategory(i.productId)}
+                    handleUnitChange={(e, value) => handleUnitChange(i.id, e, value)}
+                />
+              </td>
+              <td className="border p-2 text-right font-semibold">
+                {getProductPrice(i)?.toFixed(2)}
+              </td>
+              <td className="border p-2 text-center">
+                <button
+                  className="bg-red-600 hover:bg-red-700 text-white px-2 py-1 rounded"
+                  onClick={() => handleDeleteIngredient(i.id)}
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};

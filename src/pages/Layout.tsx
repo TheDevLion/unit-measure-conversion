@@ -18,10 +18,10 @@ export const Layout = () => {
           </li>
           {devMode.isDevMode && (<li>
             <Link
-              to="/receipt-specs"
+              to="/technical-datasheet"
               className="text-gray-700 font-medium hover:text-blue-600 active:text-blue-800 transition-colors"
             >
-              Receipt Specs
+              Technical Datasheet
             </Link>
           </li>)}
         </ul>
