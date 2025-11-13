@@ -5,17 +5,17 @@ import { useIsDevMode } from "./store/hooks";
 import { useEffect } from "react";
 import { TechnicalDatasheetPage } from "./pages/TechnicalDatasheetPage";
 
-
-
 function App() {
-  const devMode = useIsDevMode()
-  
+  const devMode = useIsDevMode();
+
   useEffect(() => {
-    if (window.location.href.includes("localhost"))
-      devMode.setIsDevMode(true)
-  }, [])
+    if (window.location.href.includes("localhost")) {
+      devMode.setIsDevMode(true);
+    }
+  }, [devMode]);
+
   return (
-    <HashRouter basename="/">
+    <HashRouter>
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<UnitMeasureConversor />} />
@@ -26,4 +26,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
