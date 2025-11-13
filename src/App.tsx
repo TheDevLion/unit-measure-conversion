@@ -1,9 +1,10 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { UnitMeasureConversor } from "./pages/UnitMeasureConversor";
-import { ReceiptSpecs } from "./pages/ReceiptSpecs";
 import { Layout } from "./pages/Layout";
 import { useIsDevMode } from "./store/hooks";
 import { useEffect } from "react";
+import { TechnicalDatasheetPage } from "./pages/TechnicalDatasheetPage";
+
 
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<UnitMeasureConversor />} />
-          <Route path="receipt-specs" element={<ReceiptSpecs />} />
+          <Route path="technical-datasheet" element={<TechnicalDatasheetPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
