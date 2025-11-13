@@ -64,11 +64,13 @@ export const UnitPicker = ({unitState, category, handleUnitChange, abbvVersion} 
                     {...params}
                     />}
                 renderOption={(props, option) => {
-                return <li
-                    {...props} 
-                    className={`px-3 py-2 text-xs cursor-pointer hover:bg-gray-200`}>
-                    {option.title}
-                </li>;
+                    const { key, ...rest } = props;
+                    return <li
+                        key={key}
+                        {...rest} 
+                        className={`px-3 py-2 text-xs cursor-pointer hover:bg-gray-200`}>
+                        {option.title}
+                    </li>;
                 }}
                 className="w-[100%]"
                 popupIcon={abbvVersion ? null : <ArrowDropDownIcon />}
