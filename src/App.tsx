@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HashRouter, Route, Routes } from "react-router-dom";
 import { UnitMeasureConversor } from "./pages/UnitMeasureConversor";
 import { Layout } from "./pages/Layout";
 import { useIsDevMode } from "./store/hooks";
@@ -15,14 +15,14 @@ function App() {
       devMode.setIsDevMode(true)
   }, [])
   return (
-    <BrowserRouter basename="/unit-measure-conversion/">
+    <HashRouter basename="/unit-measure-conversion/">
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<UnitMeasureConversor />} />
           <Route path="technical-datasheet" element={<TechnicalDatasheetPage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 
