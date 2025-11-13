@@ -15,7 +15,7 @@ function App() {
       devMode.setIsDevMode(true)
   }, [])
   return (
-    <HashRouter basename="/unit-measure-conversion/">
+    <HashRouter basename="/">
       <Routes>
         <Route element={<Layout />}>
           <Route index element={<UnitMeasureConversor />} />
