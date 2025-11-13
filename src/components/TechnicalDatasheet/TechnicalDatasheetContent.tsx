@@ -1,20 +1,15 @@
 import { useEffect, useState } from "react";
-import { useSelectedSheet } from "./store";
+import { useSelectedSheet, type Product } from "./store";
+import { UnitPicker, type Option } from "../../core/UnitPicker";
+import { convertValue } from "../../helpers/convert_values";
+import { CONVERSIONS_V2 } from "../../constants";
 
 type Ingredient = {
   id: string;
   productId: string;
   priceId: string;
-  quantity: number;
+  quantity: number | "";
   unit: string;
-};
-
-type Product = {
-  id: string;
-  name: string;
-  quantity: number;
-  unit: string;
-  prices: { id: string; description: string; value: number }[];
 };
 
 export const TechnicalDatasheetContent = () => {
@@ -64,8 +59,33 @@ export const TechnicalDatasheetContent = () => {
   const getProductPrice = (ing: Ingredient) => {
     const product = products.find((p) => p.id === ing.productId);
     const price = product?.prices.find((pr) => pr.id === ing.priceId);
-    return price ? price.value * ing.quantity : 0;
+
+    const inputValue = ing.quantity
+    const inputUnit = ing.unit
+    const outputUnit = product?.unit
+    const parcialResult = convertValue(inputValue, inputUnit, outputUnit ?? "")
+
+    if (parcialResult && product?.quantity)
+      return price && price.value && ing.quantity ? price.value * (Number(parcialResult) / product?.quantity) : 0;
   };
+
+  const handleUnitChange = (productId: string, _: React.SyntheticEvent<Element, Event>, value: Option | null) => {
+        if (!value) return;
+        const unit = value.abbv;
+        handleChange(productId, "unit", unit);
+    };
+
+  const getUnitCategory = (productId: string) => {
+    if (!productId) return undefined;
+
+    const product = products.find(p => p.id === productId);
+    if (!product) return undefined;
+
+    // retorna a categoria da unidade padrão do produto
+    const conversion = CONVERSIONS_V2.find(c => c.abbv === product.unit);
+    return conversion?.category;
+};
+
 
   if (!selectedSheet)
     return (
@@ -88,10 +108,10 @@ export const TechnicalDatasheetContent = () => {
           <tr>
             <th className="p-2 border">Product</th>
             <th className="p-2 border">Price/Description</th>
-            <th className="p-2 border">Quantity</th>
-            <th className="p-2 border">Unit</th>
-            <th className="p-2 border">Total</th>
-            <th className="p-2 border">Actions</th>
+            <th className="p-2 border w-[10%]">Qtd.</th>
+            <th className="p-2 border w-[10%]">Unit</th>
+            <th className="p-2 border w-[10%]">Total</th>
+            <th className="p-2 border w-[10%]">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -123,7 +143,7 @@ export const TechnicalDatasheetContent = () => {
                     .find((p) => p.id === i.productId)
                     ?.prices.map((pr) => (
                       <option key={pr.id} value={pr.id}>
-                        {pr.description} — ${pr.value.toFixed(2)}
+                        {pr.description} — ${pr.value}
                       </option>
                     ))}
                 </select>
@@ -133,20 +153,22 @@ export const TechnicalDatasheetContent = () => {
                   type="number"
                   className="border rounded p-1 w-full"
                   value={i.quantity}
-                  onChange={(e) =>
-                    handleChange(i.id, "quantity", Number(e.target.value))
-                  }
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    handleChange(i.id, "quantity", val === "" ? "" : Number(val))
+                  }}
                 />
               </td>
               <td className="border p-2">
-                <input
-                  className="border rounded p-1 w-full"
-                  value={i.unit}
-                  onChange={(e) => handleChange(i.id, "unit", e.target.value)}
+                <UnitPicker 
+                    abbvVersion 
+                    unitState={i.unit}   
+                    category={getUnitCategory(i.productId)}
+                    handleUnitChange={(e, value) => handleUnitChange(i.id, e, value)}
                 />
               </td>
               <td className="border p-2 text-right font-semibold">
-                {getProductPrice(i).toFixed(2)}
+                {getProductPrice(i)?.toFixed(2)}
               </td>
               <td className="border p-2 text-center">
                 <button

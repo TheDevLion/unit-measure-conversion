@@ -37,11 +37,18 @@ type UnitPickerProps = {
 }
 export const UnitPicker = ({unitState, category, handleUnitChange, abbvVersion} : UnitPickerProps) => {
     const buildAutocompleteOptions = (): Option[] => {
-        let units = CONVERSIONS_V2
+        let units = CONVERSIONS_V2;
 
         if (category) {
-            const unitObj = CONVERSIONS_V2.find(c => c.abbv === unitState)
-            units = units.filter(u => u.category === unitObj?.category) 
+            // filtro por categoria do produto
+            units = units.filter(u => u.category === category);
+        }
+
+        // mantém unitState disponível para conversão direta
+        const selectedUnitObj = CONVERSIONS_V2.find(c => c.abbv === unitState);
+        if (selectedUnitObj && !units.some(u => u.abbv === selectedUnitObj.abbv)) {
+            // se a unidade selecionada não está no filtro de categoria, adiciona no topo
+            units = [selectedUnitObj, ...units];
         }
 
         return units.map(unit => ({
@@ -49,7 +56,8 @@ export const UnitPicker = ({unitState, category, handleUnitChange, abbvVersion} 
             abbv: unit.abbv,
             category: unit.category
         }));
-    }
+    };
+
 
     const options = buildAutocompleteOptions();
     const selectedUnitOption = options.find(o => o.abbv === unitState) || null;
