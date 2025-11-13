@@ -19,3 +19,10 @@ git remote set-head origin -a
 ```pnpm install react-router-dom```
 
 - Problem with base url (pipeline CI/CD) in ```vite.config.ts```
+
+
+
+--- para arrumar
+- atualizar produtos deve atualizar ingredientes selector
+- refresh pagina quebrando URL
+- exportar status na URL
