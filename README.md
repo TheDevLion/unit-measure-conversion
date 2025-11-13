@@ -21,6 +21,9 @@ git remote set-head origin -a
 - Problem with base url (pipeline CI/CD) in ```vite.config.ts```
 
 
+## Compression and Enconding (URL)
+```pnpm add lz-string```
+
 
 --- para arrumar
 - atualizar produtos deve atualizar ingredientes selector

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useDatasheets, useSelectedSheet } from "./store";
 import Inventory2 from "@mui/icons-material/Inventory2";
 import { ProductsModal } from "./ProductModal";
+import { ShareButton } from "./ShareButton";
+
 
 export const TechnicalDatasheetHeader = () => {
   const {selectedSheet, setSelectedSheet} = useSelectedSheet()
@@ -62,8 +64,13 @@ export const TechnicalDatasheetHeader = () => {
     if (id) setSelectedSheet(id);
   };
 
+
   return (
     <header className="relative flex flex-col items-center justify-center py-2 border-b border-gray-300 bg-white shadow-sm">
+      <div className="absolute top-1 right-1">
+        <ShareButton />
+      </div>
+
       <h1 className="font-bold text-3xl mb-3">Receipt Specs</h1>
 
       <div className="flex items-center gap-3">
