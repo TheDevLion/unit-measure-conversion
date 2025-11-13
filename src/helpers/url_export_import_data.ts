@@ -8,7 +8,7 @@ const APP_KEYS = ["receipts", "products", "ingredients"]; // adjust to your actu
  */
 export function exportLocalStorageToURL(): string {
   try {
-    const data: Record<string, any> = {};
+    const data: Record<string, unknown> = {};
 
     APP_KEYS.forEach((k) => {
       const v = localStorage.getItem(k);
