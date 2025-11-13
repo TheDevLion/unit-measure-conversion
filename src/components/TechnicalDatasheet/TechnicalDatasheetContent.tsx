@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useProducts, useSelectedSheet, type Product } from "./store";
+import { useProducts, useSelectedSheet } from "./store";
 import { UnitPicker, type Option } from "../../core/UnitPicker";
 import { convertValue } from "../../helpers/convert_values";
 import { CONVERSIONS_V2 } from "../../constants";
