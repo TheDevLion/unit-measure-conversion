@@ -23,4 +23,8 @@ export const CONVERSIONS_V2 = [
   { name: "Yard", abbv: "yard", conv_rate: 0.9144, category: "distance" },
   { name: "Foot", abbv: "ft", conv_rate: 0.3048, category: "distance" },
   { name: "Inch", abbv: "in", conv_rate: 0.0254, category: "distance" },
+
+  // Random
+  { name: "Box", abbv: "box", conv_rate: 1, category: "random"},
+  { name: "Unit", abbv: "unit", conv_rate: 1, category: "random"},
 ];
