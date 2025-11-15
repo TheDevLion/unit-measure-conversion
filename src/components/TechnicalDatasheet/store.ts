@@ -21,18 +21,29 @@ export type ProductPrice = {
     value: number | "";
 }
 
+export type Ingredient = {
+  id: string;
+  productId: string;
+  priceId: string;
+  quantity: number | "";
+  unit: string;
+  datasheetId: string;
+};
+
 
 //----------------      Store Types
 export type TechnicalDatasheetState = {
     selectedSheet?: string;
     datasheets: TechnicalDatasheetRecord[];
     products: Product[];
+    ingredients: Ingredient[];
 }
 
 export type TechnicalDatasheetActions = {
     setSelectedSheet: (sheetId?: Partial<TechnicalDatasheetState['selectedSheet']> ) => void;
     setDatasheets: (datasheets: TechnicalDatasheetRecord[]) => void;
     setProducts: (products: Product[]) => void;
+    setIngredients: (ingredients: Ingredient[]) => void;
 }
 
 export type TechnicalDatasheetStore = TechnicalDatasheetState & TechnicalDatasheetActions;
@@ -43,13 +54,15 @@ export const initialStore: TechnicalDatasheetState = {
     selectedSheet: undefined,
     datasheets: [],
     products: [],
+    ingredients: [],
 }
 
 export const useTechnicalDatasheetStore = create<TechnicalDatasheetStore>()((set) => ({
     ...initialStore,
     setSelectedSheet: (sheetId?: string) => set((state) => ({...state, selectedSheet: sheetId})),
     setDatasheets: (datasheets: TechnicalDatasheetRecord[]) => set((state) => ({...state, datasheets })),
-    setProducts: (products: Product[]) => set((state) => ({...state, products }))
+    setProducts: (products: Product[]) => set((state) => ({...state, products })),
+    setIngredients: (ingredients: Ingredient[]) => set((state) => ({...state, ingredients }))
 }));
 
 
@@ -63,3 +76,6 @@ export const useDatasheets = () => useTechnicalDatasheetStore(useShallow(selectD
 
 export const selectProducts = ({ products, setProducts }: TechnicalDatasheetStore) => ({products, setProducts})
 export const useProducts = () => useTechnicalDatasheetStore(useShallow(selectProducts))
+
+export const selectIngredients = ({ ingredients, setIngredients }: TechnicalDatasheetStore) => ({ingredients, setIngredients})
+export const useIngredients = () => useTechnicalDatasheetStore(useShallow(selectIngredients))

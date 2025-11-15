@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react";
-import { useProducts, useSelectedSheet } from "./store";
+import { useIngredients, useProducts, useSelectedSheet } from "./store";
 import { UnitPicker, type Option } from "../../core/UnitPicker";
 import { convertValue } from "../../helpers/convert_values";
 import { CONVERSIONS_V2 } from "../../constants";
 
-type Ingredient = {
+export type Ingredient = {
   id: string;
   productId: string;
   priceId: string;
   quantity: number | "";
   unit: string;
+  datasheetId: string;
 };
 
 export const TechnicalDatasheetContent = () => {
   const { selectedSheet } = useSelectedSheet();
-  const {products, setProducts} = useProducts();
-  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+  const { products, setProducts } = useProducts();
+  const { ingredients, setIngredients } = useIngredients();
+
+  const [ingredientsToShow, setIngredientsToShow] = useState<Ingredient[]>([]);
 
   useEffect(() => {
     const savedIngredients = localStorage.getItem("ingredients");
@@ -25,24 +28,38 @@ export const TechnicalDatasheetContent = () => {
     if (savedProducts) setProducts(JSON.parse(savedProducts));
   }, []);
 
+  useEffect(() => {
+    if (ingredients) {
+      const receiptIngredients = ingredients.filter(i => i.datasheetId === selectedSheet)
+      setIngredientsToShow(receiptIngredients);
+    }
+  }, [selectedSheet])
+
   const persistIngredients = (newIngredients: Ingredient[]) => {
-    setIngredients(newIngredients);
-    localStorage.setItem("ingredients", JSON.stringify(newIngredients));
+    setIngredientsToShow(newIngredients);
+    const otherReceiptsIngredients = ingredients.filter(i => i.datasheetId !== selectedSheet);
+
+    const newTotalIngredients = [...otherReceiptsIngredients, ...newIngredients]
+    localStorage.setItem("ingredients", JSON.stringify(newTotalIngredients));
+    setIngredients(newTotalIngredients)
   };
 
   const handleAddIngredient = () => {
+    if (!selectedSheet) return;
+
     const newIngredient: Ingredient = {
       id: Date.now().toString(),
       productId: "",
       priceId: "",
       quantity: 1,
       unit: "",
+      datasheetId: selectedSheet,
     };
-    persistIngredients([...ingredients, newIngredient]);
+    persistIngredients([...ingredientsToShow, newIngredient]);
   };
 
   const handleDeleteIngredient = (id: string) => {
-    persistIngredients(ingredients.filter((i) => i.id !== id));
+    persistIngredients(ingredientsToShow.filter((i) => i.id !== id));
   };
 
   const handleChange = (
@@ -50,7 +67,7 @@ export const TechnicalDatasheetContent = () => {
     field: keyof Ingredient,
     value: string | number
   ) => {
-    const updated = ingredients.map((i) =>
+    const updated = ingredientsToShow.map((i) =>
       i.id === id ? { ...i, [field]: value } : i
     );
     persistIngredients(updated);
@@ -115,7 +132,7 @@ export const TechnicalDatasheetContent = () => {
           </tr>
         </thead>
         <tbody>
-          {ingredients.map((i) => (
+          {ingredientsToShow.map((i) => (
             <tr key={i.id}>
               <td className="border p-2">
                 <select
