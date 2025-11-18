@@ -49,7 +49,10 @@ export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
         units = units.filter(u => u.category === inputUnitObj?.category) 
       }
 
-      return units.map(unit => ({
+      return units
+      .filter(unit => unit.category !== "random")
+      .map(unit => (
+        {
           title: `(${unit.abbv.replace("_", " ")}) - ${unit.name}`,
           abbv: unit.abbv,
           category: unit.category
