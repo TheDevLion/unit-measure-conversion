@@ -24,6 +24,12 @@ git remote set-head origin -a
 ## Compression and Enconding (URL)
 ```pnpm add lz-string```
 
+- Compress string data (JSON.stringify) using lib method
+```LZString.compressToEncodedURIComponent(string)```
+
+- Decompress string data (JSON.parse) using lib method
+```LZString.decompressFromEncodedURIComponent(string)```
+
 
 --- para arrumar
 - atualizar produtos deve atualizar ingredientes selector

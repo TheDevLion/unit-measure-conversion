@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useDatasheets, useSelectedSheet } from "./store";
 import Inventory2 from "@mui/icons-material/Inventory2";
 import { ProductsModal } from "./ProductModal";
-import { ShareButton } from "./ShareButton";
+import { ShareButton } from "../../design_system/ShareButton";
 
 
 export const TechnicalDatasheetHeader = () => {

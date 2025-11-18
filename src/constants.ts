@@ -1,3 +1,5 @@
+export const STORE_APP_KEYS = ["receipts", "products", "ingredients"];
+
 export const CONVERSIONS_V2 = [
   // Volume
   { name: "Fluid Ounce", abbv: "fl_oz", conv_rate: 1, category: "volume" },
@@ -28,3 +30,4 @@ export const CONVERSIONS_V2 = [
   { name: "Box", abbv: "box", conv_rate: 1, category: "random"},
   { name: "Unit", abbv: "unit", conv_rate: 1, category: "random"},
 ];
+
