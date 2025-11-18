@@ -13,7 +13,7 @@ export const UnitMeasureConversor = () => {
   const outputHook = useOutput()
   
   const handleResetForm = () => {
-    setInput({ value: ''})
+    setInput({ value: '', unit: ''})
     inputFieldRef?.current?.focus()
   }
 
