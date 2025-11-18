@@ -2,7 +2,7 @@ import { Button, Tooltip } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useState } from "react";
-import { exportLocalStorageToURL, PAGE_TO_REDIRECT, QUERY_PARAM_KEY } from "./RestoreFromUrl";
+import { exportLocalStorageToURL, PAGE_TO_REDIRECT, QUERY_PARAM_KEY } from "./RestoreFromUrlHelper";
 
 export const ShareButton = () => {
   const [copied, setCopied] = useState(false);
@@ -17,7 +17,7 @@ export const ShareButton = () => {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
-    } catch (err) {}
+    } catch (err) {console.log(err)}
   };
 
   return (
