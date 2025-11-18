@@ -2,26 +2,22 @@ import { Button, Tooltip } from "@mui/material";
 import ShareIcon from "@mui/icons-material/Share";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useState } from "react";
-import { exportLocalStorageToURL } from "../../helpers/url_export_import_data";
-
+import { exportLocalStorageToURL, PAGE_TO_REDIRECT, QUERY_PARAM_KEY } from "./RestoreFromUrl";
 
 export const ShareButton = () => {
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
     const compressed = exportLocalStorageToURL();
-    // Always link to the technical-datasheet page
-    const base = `${window.location.origin}${window.location.pathname}#/technical-datasheet`;
-    const shareUrl = `${base}?data=${compressed}`;
+
+    const base = `${window.location.origin}${window.location.pathname}#${PAGE_TO_REDIRECT}`;
+    const shareUrl = `${base}?${QUERY_PARAM_KEY}=${compressed}`;
 
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
-    } catch (err) {
-      console.error("❌ Failed to copy URL:", err);
-      alert("Could not copy the link. Check clipboard permissions.");
-    }
+    } catch (err) {}
   };
 
   return (
