@@ -48,7 +48,11 @@ export const UnitMeasureConversor = () => {
   }
 
   const removeDecimals = () => {
-    outputHook.setOutput({ precision: outputHook.output.precision - 1})
+    let currentPrecision = outputHook.output.precision;
+
+    if (currentPrecision > 1) {
+      outputHook.setOutput({ precision: currentPrecision - 1})
+    }
   }
 
   return (
