@@ -13,7 +13,7 @@ export const UnitMeasureConversor = () => {
   const outputHook = useOutput()
   
   const handleResetForm = () => {
-    setInput({ value: ''})
+    setInput({ value: '', unit: ''})
     inputFieldRef?.current?.focus()
   }
 
@@ -48,7 +48,11 @@ export const UnitMeasureConversor = () => {
   }
 
   const removeDecimals = () => {
-    outputHook.setOutput({ precision: outputHook.output.precision - 1})
+    const currentPrecision = outputHook.output.precision;
+
+    if (currentPrecision > 1) {
+      outputHook.setOutput({ precision: currentPrecision - 1})
+    }
   }
 
   return (
