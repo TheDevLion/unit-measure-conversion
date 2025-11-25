@@ -24,5 +24,5 @@ export const convertValue = (
   const inputInBase = microOperation(inputObj.conv_rate, value, OPERATION_ENUM.TIMES);
   const output = microOperation(inputInBase ?? 0, outputObj.conv_rate, OPERATION_ENUM.DIVIDE);
 
-  return outputPrecision ? output ? output.toFixed(outputPrecision) : "0" : output;
+  return outputPrecision !== undefined ? output?.toFixed(outputPrecision) : "0";
 };

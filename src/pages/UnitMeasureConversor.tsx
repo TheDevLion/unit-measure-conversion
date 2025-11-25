@@ -31,6 +31,8 @@ export const UnitMeasureConversor = () => {
       outputHook.output.precision
     );
 
+    const originalInput = structuredClone(input.value)
+
     if (newInputValue === "" || isNaN(Number(newInputValue))) return;
 
     setInput({
@@ -38,8 +40,13 @@ export const UnitMeasureConversor = () => {
       value: Number(newInputValue),
     });
 
+    const splitInput = originalInput.toString().split('.')
+    let inputDecimals = 0;
+    if (splitInput.length > 1) inputDecimals = splitInput[1].length
+   
     outputHook.setOutput({
-      unit: input.unit,
+      unit: inputUnitObj.abbv,
+      precision: inputDecimals,
     });
   };
 
