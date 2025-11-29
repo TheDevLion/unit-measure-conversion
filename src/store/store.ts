@@ -1,4 +1,3 @@
-
 import { create } from "zustand";
 import type { MeasureConversionState, MeasureConversionStore } from "./type";
 
@@ -8,15 +7,18 @@ export const initialStore: MeasureConversionState = {
         unit: '',
     },
     output: {
+        value: '',
         unit: '',
         precision: 3,
     },
     isDevMode: false,
-}
+    isSwitching: false,
+};
 
 export const useMeasureConversionStore = create<MeasureConversionStore>()((set) => ({
     ...initialStore,
     setInput: (inputUpdate) => set((state) => ({ input: { ...state.input, ...inputUpdate } })),
     setOutput: (outputUpdate) => set((state) => ({ output: { ...state.output, ...outputUpdate } })),
-    setIsDevMode: (isDevMode: boolean) => set((state) => ({...state, isDevMode}))
+    setIsDevMode: (isDevMode) => set({ isDevMode }),
+    setIsSwitching: (value) => set({ isSwitching: value }),
 }));
