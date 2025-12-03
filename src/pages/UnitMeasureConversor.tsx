@@ -3,6 +3,8 @@ import { MeasureField } from "../components/MeasureField/MeasureField"
 import { useInput, useOutput, useSetInput } from "../store/hooks"
 import { convertValue } from "../helpers/convert_values"
 import { CONVERSIONS_V2 } from "../constants"
+import Draggable from "react-draggable"
+
 
 export const UnitMeasureConversor = () => {
   const inputFieldRef = useRef<HTMLInputElement | null>(null)
@@ -55,31 +57,37 @@ export const UnitMeasureConversor = () => {
     }
   }
 
+  const nodeRef = useRef<HTMLDivElement | null>(null);
+
   return (
-    <div className="flex items-center justify-center flex-col p-10">
-      <MeasureField />
+      <Draggable
+        nodeRef={nodeRef}
+        axis="both"
+        defaultPosition={{ x: 0, y: 0 }}
+        scale={1}
+      >
+        <div ref={nodeRef} className="flex items-center justify-center flex-col  p-10">
+          <MeasureField />
 
-      <div className="flex gap-5">
-        <button className="text-3xl" onClick={handleSwitch}>&#x21D5;</button>
+          <div className="flex gap-5">
+            <button className="text-3xl" onClick={handleSwitch}>&#x21D5;</button>
 
-        <button   
-          className="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 transition-colors"
-          onClick={handleResetForm}
-        >
-          Limpar
-        </button>
-      </div>
+            <button   
+              className="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 transition-colors"
+              onClick={handleResetForm}
+            >
+              Limpar
+            </button>
+          </div>
 
-
-      <div className="relative">
-        <MeasureField readOnly />
-        <div className="absolute top-20 left-[40px]">
-          <button onClick={removeDecimals}>&larr;</button>
-          <button onClick={addDecimals}>&rarr;</button>
+          <div className="relative">
+            <MeasureField readOnly />
+            <div className="absolute top-20 left-[40px]">
+              <button onClick={removeDecimals}>&larr;</button>
+              <button onClick={addDecimals}>&rarr;</button>
+            </div>
+          </div>
         </div>
-      </div>  
-
-      
-    </div>
-  )
+      </Draggable>
+  );
 }
