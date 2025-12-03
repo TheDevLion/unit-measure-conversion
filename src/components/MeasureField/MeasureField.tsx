@@ -61,8 +61,9 @@ export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
     const options = useMemo(() => buildAutocompleteOptions(), [input.unit, outputHook.output.unit]);
     const selectedUnitOption = options.find(o => !readOnly ? o.abbv === input.unit : o.abbv === outputHook.output.unit) || null;
 
-
-    return <div className="flex p-5 w-[450px] justify-center align-center">
+    return(
+      
+        <div className="flex p-5 w-[450px] justify-center align-center">
             <input 
               className="mx-5 border-2 border-black px-2 rounded-sm" 
               value={readOnly ? convertValue(input.value, input.unit, outputHook.output.unit, outputHook.output.precision) : input.value} 
@@ -103,6 +104,7 @@ export const MeasureField = ({ readOnly }: MeasureFieldProps) => {
                 },
               }}
             />
-            
         </div>
+
+    ) 
 }
