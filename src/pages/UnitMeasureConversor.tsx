@@ -1,137 +1,128 @@
-import { useRef } from "react"
-import { MeasureField } from "../components/MeasureField/MeasureField"
-import { useInput, useOutput, useSetInput } from "../store/hooks"
-import { convertValue } from "../helpers/convert_values"
-import { CONVERSIONS_V2 } from "../constants"
-import Draggable from "react-draggable"
-import { Card, CardContent, IconButton } from "@mui/material"
-import CloseIcon from '@mui/icons-material/Close';
-import Fab from '@mui/material/Fab'; 
-import AddIcon from '@mui/icons-material/Add'; 
-import Tooltip from '@mui/material/Tooltip';
+import { useRef } from "react";
+import { MeasureField } from "../components/MeasureField/MeasureField";
 
+import {
+  useConverter,
+  useSetConverterInput,
+  useConverterOutput,
+  useSetConverterOutput,
+  useSetConverterPosition,
+  useRemoveConverter,
+} from "../store/hooks";
 
-export const UnitMeasureConversor = () => {
-  const inputFieldRef = useRef<HTMLInputElement | null>(null)
+import { convertValue } from "../helpers/convert_values";
+import { CONVERSIONS_V2 } from "../constants";
 
-  const input = useInput()
-  const setInput = useSetInput()
+import Draggable from "react-draggable";
+import { Card, CardContent, IconButton } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
-  const outputHook = useOutput()
-  
+type Props = {
+  id: string;
+};
+
+export const UnitMeasureConversor = ({ id }: Props) => {
+  const nodeRef = useRef<HTMLDivElement | null>(null);
+
+  const converter = useConverter(id);
+  if (!converter) return null;
+
+  const setInput = useSetConverterInput();
+  const output = useConverterOutput(id);
+  const setOutput = useSetConverterOutput();
+  const setPosition = useSetConverterPosition();
+  const removeConverter = useRemoveConverter();
+
   const handleResetForm = () => {
-    setInput({ value: '', unit: ''})
-    inputFieldRef?.current?.focus()
-  }
+    setInput(id, { value: "", unit: "" });
+  };
 
   const handleSwitch = () => {
-    const inputUnitObj = CONVERSIONS_V2.find(u => u.abbv === input.unit);
+    const inputUnitObj = CONVERSIONS_V2.find((u) => u.abbv === converter.input.unit);
     if (!inputUnitObj) return;
 
-    const outputUnitObj = CONVERSIONS_V2.find(u =>  u.abbv === outputHook.output.unit);
+    const outputUnitObj = CONVERSIONS_V2.find((u) => u.abbv === output.unit);
     if (!outputUnitObj) return;
 
     const newInputValue = convertValue(
-      input.value,
-      input.unit,
+      converter.input.value,
+      converter.input.unit,
       outputUnitObj.abbv,
-      outputHook.output.precision
+      output.precision
     );
 
     if (newInputValue === "" || isNaN(Number(newInputValue))) return;
 
-    setInput({
+    setInput(id, {
       unit: outputUnitObj.abbv,
       value: Number(newInputValue),
     });
 
-    outputHook.setOutput({
-      unit: input.unit,
+    setOutput(id, {
+      unit: converter.input.unit,
     });
   };
 
   const addDecimals = () => {
-    outputHook.setOutput({ precision: outputHook.output.precision + 1})
-  }
+    setOutput(id, { precision: output.precision + 1 });
+  };
 
   const removeDecimals = () => {
-    const currentPrecision = outputHook.output.precision;
-
-    if (currentPrecision > 1) {
-      outputHook.setOutput({ precision: currentPrecision - 1})
-    }
-  }
-
-  const nodeRef = useRef<HTMLDivElement | null>(null);
+    if (output.precision > 1) setOutput(id, { precision: output.precision - 1 });
+  };
 
   return (
-    <>       
-      <Draggable nodeRef={nodeRef} bounds="body" defaultPosition={{ x: 100, y: 100 }}>
-        <Card
-          ref={nodeRef}
-          sx={{
-            position: "fixed",
-            padding: 2,
-            minWidth: 420,
-            borderRadius: 3,
-            boxShadow: 4,
-            cursor: "move",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              marginBottom: 8,
-            }}
-          >
-            <IconButton size="small">
-              <CloseIcon />
-            </IconButton>
+    <Draggable
+      nodeRef={nodeRef}
+      bounds="body"
+      defaultPosition={converter.position}
+      onStop={(_, data) => {
+        setPosition(id, { x: data.x, y: data.y });
+      }}
+    >
+      <Card
+        ref={nodeRef}
+        sx={{
+          position: "fixed",
+          padding: 2,
+          minWidth: 420,
+          borderRadius: 3,
+          boxShadow: 4,
+          cursor: "move",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
+          <IconButton size="small" onClick={() => removeConverter(id)}>
+            <CloseIcon />
+          </IconButton>
+        </div>
+
+        <CardContent>
+          <MeasureField converterId={id} />
+
+          <div className="flex gap-5 my-3 items-center justify-center">
+            <button className="text-3xl" onClick={handleSwitch}>
+              &#x21D5;
+            </button>
+
+            <button
+              className="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 transition-colors"
+              onClick={handleResetForm}
+            >
+              Limpar
+            </button>
           </div>
 
-          <CardContent>
-            <MeasureField />
+          <div className="relative">
+            <MeasureField readOnly converterId={id} />
 
-            <div className="flex gap-5 my-3 items-center justify-center">
-              <button className="text-3xl" onClick={handleSwitch}>
-                &#x21D5;
-              </button>
-
-              <button
-                className="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 transition-colors"
-                onClick={handleResetForm}
-              >
-                Limpar
-              </button>
+            <div className="absolute top-20 left-[40px] flex gap-2">
+              <button onClick={removeDecimals}>&larr;</button>
+              <button onClick={addDecimals}>&rarr;</button>
             </div>
-
-            <div className="relative">
-              <MeasureField readOnly />
-
-              <div className="absolute top-20 left-[40px] flex gap-2">
-                <button onClick={removeDecimals}>&larr;</button>
-                <button onClick={addDecimals}>&rarr;</button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </Draggable>
-      
-      <Tooltip title="Adicionar um novo card de conversão"> 
-        <Fab
-          color="primary"
-          aria-label="adicionar"
-          sx={{
-            position: 'fixed',
-            bottom: 16,
-            right: 16,
-          }}
-          onClick={() => console.log('A lógica de adicionar card virá aqui!')} 
-        >
-          <AddIcon />
-        </Fab>
-      </Tooltip> {/* <--- FIM DO TOOLTIP */}
-    </>
+          </div>
+        </CardContent>
+      </Card>
+    </Draggable>
   );
-}
+};
