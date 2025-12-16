@@ -14,14 +14,14 @@ export const Layout = () => {
               Unit Measure Conversor
             </Link>
           </li>
-          {(<li>
+          {/* {(<li>
             <Link
               to="/technical-datasheet"
               className="text-gray-700 font-medium hover:text-blue-600 active:text-blue-800 transition-colors"
             >
               Technical Datasheet
             </Link>
-          </li>)}
+          </li>)} */}
         </ul>
       </nav>
 
