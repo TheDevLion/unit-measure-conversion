@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { MeasureConversionState, MeasureConversionStore } from "./type";
 
-export const initialStore: MeasureConversionState = {
+export const initialState: MeasureConversionState = {
     input: {
         value: '',
         unit: '',
@@ -16,7 +16,7 @@ export const initialStore: MeasureConversionState = {
 };
 
 export const useMeasureConversionStore = create<MeasureConversionStore>()((set) => ({
-    ...initialStore,
+    ...initialState,
     setInput: (inputUpdate) => set((state) => ({ input: { ...state.input, ...inputUpdate } })),
     setOutput: (outputUpdate) => set((state) => ({ output: { ...state.output, ...outputUpdate } })),
     setIsDevMode: (isDevMode) => set({ isDevMode }),
