@@ -11,7 +11,7 @@ export const Layout = () => {
               to="/"
               className="text-gray-700 font-medium hover:text-blue-600 active:text-blue-800 transition-colors"
             >
-              Unit Measure Conversor
+              Unit Measure Converter
             </Link>
           </li>
           {/* {(<li>
