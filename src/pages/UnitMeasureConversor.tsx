@@ -25,14 +25,14 @@ export const UnitMeasureConversor = ({ id }: Props) => {
   const nodeRef = useRef<HTMLDivElement | null>(null);
 
   const converter = useConverter(id);
-  if (!converter) return null;
-
   const setInput = useSetConverterInput();
   const output = useConverterOutput(id);
   const setOutput = useSetConverterOutput();
   const setPosition = useSetConverterPosition();
   const removeConverter = useRemoveConverter();
 
+  if (!converter) return null;
+  
   const handleResetForm = () => {
     setInput(id, { value: "", unit: "" });
   };
