@@ -15,8 +15,3 @@ export const useOutput = () => useMeasureConversionStore(useShallow(selectCombin
 
 export const selectIsDevMode = ({ isDevMode, setIsDevMode }: MeasureConversionStore) => ({ isDevMode, setIsDevMode })
 export const useIsDevMode = () => useMeasureConversionStore(useShallow(selectIsDevMode))
-
-// Pattern 3 – Switching
-export const selectIsSwitching = ({ isSwitching, setIsSwitching }: MeasureConversionStore) => ({ isSwitching, setIsSwitching });
-
-export const useIsSwitching = () => useMeasureConversionStore(useShallow(selectIsSwitching));
