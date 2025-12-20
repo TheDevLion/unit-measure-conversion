@@ -84,7 +84,7 @@ export const UnitMeasureConversor = ({ id }: Props) => {
         ref={nodeRef}
         sx={{
           position: "fixed",
-          padding: 2,
+          padding: .5,
           minWidth: 420,
           borderRadius: 3,
           boxShadow: 4,
@@ -97,10 +97,10 @@ export const UnitMeasureConversor = ({ id }: Props) => {
           </IconButton>
         </div>
 
-        <CardContent>
+        <CardContent sx={{ padding: 0 }} >
           <MeasureField converterId={id} />
 
-          <div className="flex gap-5 my-3 items-center justify-center">
+          <div className="flex gap-5 items-center justify-center">
             <button className="text-3xl" onClick={handleSwitch}>
               &#x21D5;
             </button>
