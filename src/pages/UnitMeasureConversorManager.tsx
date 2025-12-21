@@ -12,25 +12,34 @@ export const UnitMeasureConversorManager = () => {
   const addConverter = useAddConverter();
 
   return (
-    <>
-      {converters.map((c: ConverterState) => (
-        <UnitMeasureConversor key={c.id} id={c.id} />
-      ))}
+  <>
+    {converters.map((c: ConverterState) => (
+      <UnitMeasureConversor key={c.id} id={c.id} />
+    ))}
 
-      <Tooltip title="Adicionar um novo card de conversão">
-        <Fab
-          color="primary"
-          aria-label="adicionar"
-          sx={{
-            position: "fixed",
-            bottom: 16,
-            right: 16,
-          }}
-          onClick={() => addConverter()}
-        >
-          <AddIcon />
-        </Fab>
-      </Tooltip>
-    </>
-  );
-};
+    <Tooltip title="Adicionar um novo card de conversão">
+      <Fab
+        aria-label="adicionar"
+        onClick={() => addConverter()}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+
+          // 🎨 mesma identidade visual do card
+          background: "linear-gradient(135deg, #7C3AED, #A78BFA)",
+          color: "#FFFFFF",
+
+          boxShadow: "0 12px 30px rgba(124, 58, 237, 0.45)",
+
+          "&:hover": {
+            background: "linear-gradient(135deg, #6D28D9, #8B5CF6)",
+          },
+        }}
+      >
+        <AddIcon />
+      </Fab>
+    </Tooltip>
+  </>
+);
+}

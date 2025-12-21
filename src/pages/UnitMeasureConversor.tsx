@@ -72,80 +72,103 @@ export const UnitMeasureConversor = ({ id }: Props) => {
   };
 
   return (
-  <Draggable
-    nodeRef={nodeRef}
-    bounds="body"
-    defaultPosition={converter.position}
-    onStop={(_, data) => {
-      setPosition(id, { x: data.x, y: data.y });
-    }}
-  >
-    <Card
-      ref={nodeRef}
-      sx={{
-        position: "fixed",
-        padding: 0.5,
-        minWidth: 420,
-        borderRadius: 3,
-        boxShadow: 4,
-        cursor: "move",
-        zIndex: 10,
-        backgroundColor: "#ffffff",
-        border: "1px solid #ddd6fe", // violet-200
+    <Draggable
+      nodeRef={nodeRef}
+      bounds="body"
+      defaultPosition={converter.position}
+      onStop={(_, data) => {
+        setPosition(id, { x: data.x, y: data.y });
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          marginBottom: 8,
+      <Card
+        ref={nodeRef}
+        sx={{
+          position: "fixed",
+          minWidth: 420,
+          borderRadius: 4,
+          padding: 1,
+          cursor: "move",
+          zIndex: 40,
+          background: "linear-gradient(135deg, #A78BFA, #C4B5FD)",
+          border: "1px solid rgba(124, 58, 237, 0.45)",
+          boxShadow: "0 25px 50px rgba(124, 58, 237, 0.35)",
         }}
       >
-        <IconButton size="small" onClick={() => removeConverter(id)}>
-          <CloseIcon />
-        </IconButton>
-      </div>
-
-      <CardContent sx={{ padding: 0 }}>
-        <MeasureField converterId={id} />
-
-        <div className="flex gap-5 items-center justify-center my-2">
-          <button
-            className="text-3xl text-violet-600 hover:text-violet-800 transition-colors"
-            onClick={handleSwitch}
+        <div className="flex justify-end mb-2">
+          <IconButton
+            size="small"
+            onClick={() => removeConverter(id)}
+            sx={{
+              color: "#4C1D95",
+              "&:hover": {
+                color: "#6D28D9",
+              },
+            }}
           >
-            &#x21D5;
-          </button>
-
-          <button
-            className="bg-violet-100 text-violet-700 font-semibold py-2 px-4 rounded
-                       hover:bg-violet-200 transition-colors"
-            onClick={handleResetForm}
-          >
-            Limpar
-          </button>
+            <CloseIcon fontSize="small" />
+          </IconButton>
         </div>
 
-        <div className="relative">
-          <MeasureField readOnly converterId={id} />
+        <CardContent sx={{ padding: 0 }}>
+          <MeasureField converterId={id} />
 
-          <div className="absolute top-20 left-[40px] flex gap-2 text-violet-600">
+          <div className="flex gap-5 items-center justify-center my-3">
             <button
-              className="hover:text-violet-800 transition-colors"
-              onClick={removeDecimals}
+              onClick={handleSwitch}
+              className="
+                text-3xl
+                text-[#4C1D95]
+                hover:text-[#6D28D9]
+                transition-colors
+              "
             >
-              &larr;
+              &#x21D5;
             </button>
+
             <button
-              className="hover:text-violet-800 transition-colors"
-              onClick={addDecimals}
+              onClick={handleResetForm}
+              className="
+                bg-[#7C3AED]
+                text-white
+                font-semibold
+                py-2 px-4
+                rounded
+                hover:bg-[#6D28D9]
+                transition-colors
+              "
             >
-              &rarr;
+              Limpar
             </button>
           </div>
-        </div>
-      </CardContent>
-    </Card>
-  </Draggable>
-);
-}
+
+          <div className="relative">
+            <MeasureField readOnly converterId={id} />
+
+            <div
+              className="
+                absolute
+                top-20 left-[40px]
+                flex gap-3
+                text-[#4C1D95]
+              "
+            >
+              <button
+                onClick={removeDecimals}
+                className="hover:text-[#6D28D9] transition-colors"
+              >
+                &larr;
+              </button>
+
+              <button
+                onClick={addDecimals}
+                className="hover:text-[#6D28D9] transition-colors"
+              >
+                &rarr;
+              </button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </Draggable>
+  );
+};
