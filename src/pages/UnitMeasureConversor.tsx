@@ -72,57 +72,80 @@ export const UnitMeasureConversor = ({ id }: Props) => {
   };
 
   return (
-    <Draggable
-      nodeRef={nodeRef}
-      bounds="body"
-      defaultPosition={converter.position}
-      onStop={(_, data) => {
-        setPosition(id, { x: data.x, y: data.y });
+  <Draggable
+    nodeRef={nodeRef}
+    bounds="body"
+    defaultPosition={converter.position}
+    onStop={(_, data) => {
+      setPosition(id, { x: data.x, y: data.y });
+    }}
+  >
+    <Card
+      ref={nodeRef}
+      sx={{
+        position: "fixed",
+        padding: 0.5,
+        minWidth: 420,
+        borderRadius: 3,
+        boxShadow: 4,
+        cursor: "move",
+        zIndex: 10,
+        backgroundColor: "#ffffff",
+        border: "1px solid #ddd6fe", // violet-200
       }}
     >
-      <Card
-        ref={nodeRef}
-        sx={{
-          position: "fixed",
-          padding: .5,
-          minWidth: 420,
-          borderRadius: 3,
-          boxShadow: 4,
-          cursor: "move",
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: 8,
         }}
       >
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
-          <IconButton size="small" onClick={() => removeConverter(id)}>
-            <CloseIcon />
-          </IconButton>
+        <IconButton size="small" onClick={() => removeConverter(id)}>
+          <CloseIcon />
+        </IconButton>
+      </div>
+
+      <CardContent sx={{ padding: 0 }}>
+        <MeasureField converterId={id} />
+
+        <div className="flex gap-5 items-center justify-center my-2">
+          <button
+            className="text-3xl text-violet-600 hover:text-violet-800 transition-colors"
+            onClick={handleSwitch}
+          >
+            &#x21D5;
+          </button>
+
+          <button
+            className="bg-violet-100 text-violet-700 font-semibold py-2 px-4 rounded
+                       hover:bg-violet-200 transition-colors"
+            onClick={handleResetForm}
+          >
+            Limpar
+          </button>
         </div>
 
-        <CardContent sx={{ padding: 0 }} >
-          <MeasureField converterId={id} />
+        <div className="relative">
+          <MeasureField readOnly converterId={id} />
 
-          <div className="flex gap-5 items-center justify-center">
-            <button className="text-3xl" onClick={handleSwitch}>
-              &#x21D5;
-            </button>
-
+          <div className="absolute top-20 left-[40px] flex gap-2 text-violet-600">
             <button
-              className="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 transition-colors"
-              onClick={handleResetForm}
+              className="hover:text-violet-800 transition-colors"
+              onClick={removeDecimals}
             >
-              Limpar
+              &larr;
+            </button>
+            <button
+              className="hover:text-violet-800 transition-colors"
+              onClick={addDecimals}
+            >
+              &rarr;
             </button>
           </div>
-
-          <div className="relative">
-            <MeasureField readOnly converterId={id} />
-
-            <div className="absolute top-20 left-[40px] flex gap-2">
-              <button onClick={removeDecimals}>&larr;</button>
-              <button onClick={addDecimals}>&rarr;</button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </Draggable>
-  );
-};
+        </div>
+      </CardContent>
+    </Card>
+  </Draggable>
+);
+}
