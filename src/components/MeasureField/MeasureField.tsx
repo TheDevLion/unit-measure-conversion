@@ -80,7 +80,7 @@ export const MeasureField = ({ readOnly, converterId }: MeasureFieldProps) => {
         }
         onChange={handleValueChange}
         type="number"
-        placeholder={!readOnly ? "Valor a ser convertido" : "Result"}
+        placeholder={!readOnly ? "Value to be converted" : "Result"}
         readOnly={readOnly}
       />
 
