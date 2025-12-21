@@ -26,7 +26,6 @@ export const UnitMeasureConversorManager = () => {
           bottom: 16,
           right: 16,
 
-          // 🎨 mesma identidade visual do card
           background: "linear-gradient(135deg, #7C3AED, #A78BFA)",
           color: "#FFFFFF",
 
