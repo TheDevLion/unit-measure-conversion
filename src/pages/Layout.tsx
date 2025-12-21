@@ -2,25 +2,32 @@ import { Outlet, Link } from "react-router-dom";
 
 export const Layout = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-violet-50 via-violet-50/40 to-white">
-      
-      <nav className="
-        bg-violet-50/80
-        backdrop-blur
-        py-4
-        shadow-sm
-        border-b border-violet-100
-        sticky top-0 z-50
-      ">
+    <div
+      className="
+        min-h-screen flex flex-col
+        bg-[#0B0D10]
+        text-[#F5F6FA]
+      "
+    >
+      <nav
+        className="
+          bg-[#12141A]/80
+          backdrop-blur
+          py-4
+          shadow-lg
+          border-b border-[#1F2230]
+          sticky top-0 z-50
+        "
+      >
         <ul className="flex justify-center">
           <li>
             <Link
               to="/"
               className="
-                text-violet-700
+                text-[#A78BFA]
                 font-semibold
                 text-lg
-                hover:text-violet-900
+                hover:text-[#C4B5FD]
                 transition-colors
               "
             >
