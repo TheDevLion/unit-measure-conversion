@@ -84,30 +84,58 @@ export const UnitMeasureConversor = ({ id }: Props) => {
         ref={nodeRef}
         sx={{
           position: "fixed",
-          padding: 2,
           minWidth: 420,
-          borderRadius: 3,
-          boxShadow: 4,
+          borderRadius: 4,
+          padding: 1,
           cursor: "move",
+          zIndex: 40,
+          background: "linear-gradient(135deg, #A78BFA, #C4B5FD)",
+          border: "1px solid rgba(124, 58, 237, 0.45)",
+          boxShadow: "0 25px 50px rgba(124, 58, 237, 0.35)",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 8 }}>
-          <IconButton size="small" onClick={() => removeConverter(id)}>
-            <CloseIcon />
+        <div className="flex justify-end mb-2">
+          <IconButton
+            size="small"
+            onClick={() => removeConverter(id)}
+            sx={{
+              color: "#4C1D95",
+              "&:hover": {
+                color: "#6D28D9",
+              },
+            }}
+          >
+            <CloseIcon fontSize="small" />
           </IconButton>
         </div>
 
-        <CardContent>
+        <CardContent sx={{ padding: 0 }}>
           <MeasureField converterId={id} />
 
-          <div className="flex gap-5 my-3 items-center justify-center">
-            <button className="text-3xl" onClick={handleSwitch}>
+          <div className="flex gap-5 items-center justify-center my-3">
+            <button
+              onClick={handleSwitch}
+              className="
+                text-3xl
+                text-[#4C1D95]
+                hover:text-[#6D28D9]
+                transition-colors
+              "
+            >
               &#x21D5;
             </button>
 
             <button
-              className="bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded hover:bg-gray-300 transition-colors"
               onClick={handleResetForm}
+              className="
+                bg-[#7C3AED]
+                text-white
+                font-semibold
+                py-2 px-4
+                rounded
+                hover:bg-[#6D28D9]
+                transition-colors
+              "
             >
               Limpar
             </button>
@@ -116,9 +144,27 @@ export const UnitMeasureConversor = ({ id }: Props) => {
           <div className="relative">
             <MeasureField readOnly converterId={id} />
 
-            <div className="absolute top-20 left-[40px] flex gap-2">
-              <button onClick={removeDecimals}>&larr;</button>
-              <button onClick={addDecimals}>&rarr;</button>
+            <div
+              className="
+                absolute
+                top-20 left-[40px]
+                flex gap-3
+                text-[#4C1D95]
+              "
+            >
+              <button
+                onClick={removeDecimals}
+                className="hover:text-[#6D28D9] transition-colors"
+              >
+                &larr;
+              </button>
+
+              <button
+                onClick={addDecimals}
+                className="hover:text-[#6D28D9] transition-colors"
+              >
+                &rarr;
+              </button>
             </div>
           </div>
         </CardContent>

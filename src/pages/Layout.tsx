@@ -2,26 +2,38 @@ import { Outlet, Link } from "react-router-dom";
 
 export const Layout = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      
-      <nav className="bg-gray-100 py-4 shadow-md">
-        <ul className="flex justify-center space-x-8">
+    <div
+      className="
+        min-h-screen flex flex-col
+        bg-[#0B0D10]
+        text-[#F5F6FA]
+      "
+    >
+      <nav
+        className="
+          bg-[#12141A]/80
+          backdrop-blur
+          py-4
+          shadow-lg
+          border-b border-[#1F2230]
+          sticky top-0 z-50
+        "
+      >
+        <ul className="flex justify-center">
           <li>
             <Link
               to="/"
-              className="text-gray-700 font-medium hover:text-blue-600 active:text-blue-800 transition-colors"
+              className="
+                text-[#A78BFA]
+                font-semibold
+                text-lg
+                hover:text-[#C4B5FD]
+                transition-colors
+              "
             >
               Unit Measure Converter
             </Link>
           </li>
-          {/* {(<li>
-            <Link
-              to="/technical-datasheet"
-              className="text-gray-700 font-medium hover:text-blue-600 active:text-blue-800 transition-colors"
-            >
-              Technical Datasheet
-            </Link>
-          </li>)} */}
         </ul>
       </nav>
 

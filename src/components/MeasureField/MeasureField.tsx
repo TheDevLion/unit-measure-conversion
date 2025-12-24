@@ -72,7 +72,7 @@ export const MeasureField = ({ readOnly, converterId }: MeasureFieldProps) => {
   return (
     <div className="flex p-5 w-[450px] justify-center align-center">
       <input
-        className="mx-5 border-2 border-black px-2 rounded-sm"
+        className="mx-1 border-2 border-black px-2 rounded-sm"
         value={
           readOnly
             ? convertValue(input.value, input.unit, output.unit, output.precision)
@@ -80,7 +80,7 @@ export const MeasureField = ({ readOnly, converterId }: MeasureFieldProps) => {
         }
         onChange={handleValueChange}
         type="number"
-        placeholder={!readOnly ? "Valor a ser convertido" : "Result"}
+        placeholder={!readOnly ? "Value to be converted" : "Result"}
         readOnly={readOnly}
       />
 
