@@ -1,3 +1,80 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Responsividade Mobile - Apenas media queries, sem alterar código existente */
+@media (max-width: 768px) {
+  /* Card Material-UI: reduzir largura mínima para mobile */
+  .MuiCard-root {
+    min-width: calc(100vw - 32px) !important;
+    max-width: calc(100vw - 32px) !important;
+    width: calc(100vw - 32px) !important;
+  }
+
+  /* Container MeasureField (div com flex, p-5 e w-[450px]): tornar responsivo */
+  div.flex[class*="p-5"][class*="w-[450px]"] {
+    width: 100% !important;
+    flex-direction: column !important;
+    padding: 1rem !important;
+    gap: 0.75rem !important;
+    align-items: stretch !important;
+  }
+
+  /* Input dentro do MeasureField: largura total e altura adequada no mobile */
+  div.flex[class*="w-[450px]"] > input.mx-1 {
+    width: 100% !important;
+    min-width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 0.75rem !important;
+    font-size: 1rem !important;
+    min-height: 48px !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Autocomplete dentro do MeasureField: largura total no mobile */
+  div.flex[class*="w-[450px]"] > .MuiAutocomplete-root,
+  div.flex[class*="w-[450px]"] > [class*="w-[350px]"] {
+    width: 100% !important;
+    min-width: 100% !important;
+  }
+
+  /* TextField dentro do Autocomplete: altura consistente */
+  div.flex[class*="w-[450px]"] .MuiTextField-root,
+  div.flex[class*="w-[450px]"] .MuiInputBase-root {
+    width: 100% !important;
+  }
+
+  /* Botões de decimais: ajustar posicionamento no mobile para não sobrepor */
+  /* No mobile, posicionar após o segundo MeasureField (input + autocomplete em coluna) */
+  div.relative > div.absolute[class*="top-20"][class*="left-[40px]"] {
+    position: static !important;
+    top: auto !important;
+    left: auto !important;
+    margin-top: 0.75rem !important;
+    margin-left: 1rem !important;
+    display: flex !important;
+    z-index: auto !important;
+  }
+
+  /* Garantir que o container relative não corte elementos */
+  div.relative {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  /* Layout main: reduzir padding no mobile */
+  main.flex-1[class*="p-6"] {
+    padding: 0.75rem !important;
+  }
+
+  /* Prevenir scroll horizontal */
+  body {
+    overflow-x: hidden !important;
+  }
+
+  /* Garantir que o CardContent não tenha overflow */
+  .MuiCardContent-root {
+    overflow-x: hidden !important;
+  }
+}
