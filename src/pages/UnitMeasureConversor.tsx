@@ -79,6 +79,7 @@ export const UnitMeasureConversor = ({ id }: Props) => {
       onStop={(_, data) => {
         setPosition(id, { x: data.x, y: data.y });
       }}
+      cancel="input, button, .MuiAutocomplete-root, .MuiTextField-root, .MuiInputBase-root, .MuiButton-root, .MuiIconButton-root"
     >
       <Card
         ref={nodeRef}
