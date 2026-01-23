@@ -1,6 +1,31 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <meta http-equiv="refresh" content="0; url=/unit-measure-conversion/" />
+    <meta charset="utf-8" />
+    <title>Unit Measure Converter</title>
+    <script>
+      (function () {
+        var l = window.location;
+        var segment = 1;
+        var newUrl =
+          l.protocol +
+          "//" +
+          l.hostname +
+          (l.port ? ":" + l.port : "") +
+          l.pathname
+            .split("/")
+            .slice(0, segment + 1)
+            .join("/") +
+          "/?/" +
+          l.pathname
+            .split("/")
+            .slice(segment + 1)
+            .join("/") +
+          l.search.replace(/&/g, "~and~") +
+          l.hash;
+        window.location.replace(newUrl);
+      })();
+    </script>
   </head>
+  <body></body>
 </html>
